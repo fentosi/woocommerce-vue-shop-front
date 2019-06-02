@@ -9,5 +9,6 @@ describe('Navbar.vue', () => {
       }
     });
     expect(component.findAll('.nav-item').length).toBe(1);
+    expect(component.find('.nav-item a:nth-child(1)').text()).toBe('Menu 1');
   });
 });

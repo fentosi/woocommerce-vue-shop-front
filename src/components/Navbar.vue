@@ -7,7 +7,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item active">
-          <a class="nav-link" href="#">Menu 1 <span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="#">Menu 1</a>
         </li>
       </ul>
     </div>

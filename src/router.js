@@ -11,7 +11,7 @@ export default new Router({
       path: '/orders',
       name: 'orders',
       // lazy load
-      component: () => import('./views/Orders.vue')
+      component: () => import('./views/OrderList.vue')
     }
   ]
 });

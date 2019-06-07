@@ -9,7 +9,7 @@ export default new Router({
   routes: [
     {
       path: '/orders',
-      name: 'orders',
+      name: 'ordersList',
       // lazy load
       component: () => import('./views/OrderList.vue')
     }

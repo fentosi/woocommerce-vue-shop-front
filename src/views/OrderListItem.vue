@@ -24,7 +24,7 @@ export default {
     date_paid_gmt: String
   },
   computed: {
-    name () {
+    name() {
       return this.billing.first_name + ' ' + this.billing.last_name;
     }
   }

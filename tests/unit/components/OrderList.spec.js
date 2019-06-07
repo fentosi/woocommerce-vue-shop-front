@@ -1,9 +1,12 @@
 import { shallowMount } from '@vue/test-utils';
 import OrderList from '../../../src/views/OrderList';
 import OrderListItem from '../../../src/views/OrderListItem';
+import { createStore } from '../../../src/store';
 
 describe('OrdersList.vue', () => {
   let component;
+  let store;
+
   const data = [{
     id: 123,
     billing: {
@@ -16,15 +19,18 @@ describe('OrdersList.vue', () => {
     date_created_gmt: 'date created',
     date_paid_gmt: 'date paid'
   }];
+
   beforeEach(() => {
+    store = store = createStore();
+    store.state.orders = data;
     component = shallowMount(OrderList, {
-      propsData: {
-        orders: data
+      mocks: {
+        $store: store
       }
     });
   });
 
-  it('renders orders list items', () => {
+  it('renders ordersRepository list items', () => {
     expect(component.contains(OrderListItem)).toBe(true);
   });
 });

@@ -1,5 +1,5 @@
 import ordersRepository from '../../../src/repositories/orders';
-import { LOAD_ORDERS } from '../../../src/store/actionTypes';
+import { GET_ORDER, LOAD_ORDER, LOAD_ORDERS } from '../../../src/store/actionTypes';
 import { createStore } from '../../../src/store';
 
 describe('Actions', () => {
@@ -11,21 +11,77 @@ describe('Actions', () => {
     total: '180',
     total_tax: '0'
   };
-  let orderRepositoryMock;
+  const orderNotInTheStore = {
+    id: 123,
+    status: 'completed',
+    date_created_gmt: '2017-04-17T16:15:22',
+    date_modified_gmt: '2017-04-17T16:15:22',
+    total: '10',
+    total_tax: '0'
+  };
+  let orderRepositoryGetAllMock;
+  let orderRepositoryGetMock;
   let store;
 
   beforeEach(() => {
-    orderRepositoryMock = jest.spyOn(ordersRepository, 'getAll').mockImplementation(() => [order]);
+    orderRepositoryGetAllMock = jest.spyOn(ordersRepository, 'getAll').mockImplementation(() => [order]);
+    orderRepositoryGetMock = jest.spyOn(ordersRepository, 'get').mockImplementation(() => orderNotInTheStore);
     store = createStore();
+  });
+
+  afterEach(() => {
+    orderRepositoryGetAllMock.mockRestore();
+    orderRepositoryGetMock.mockRestore();
   });
 
   describe('LOAD_ORDERS', () => {
     it('sets proper orders ', async () => {
       const promise = store.dispatch(LOAD_ORDERS);
-
       await promise;
 
       expect(store.state.orders).toEqual([order]);
+    });
+  });
+
+  describe('LOAD_ORDER', () => {
+    beforeEach(async () => {
+      const promise = store.dispatch(LOAD_ORDERS);
+      await promise;
+    });
+
+    it('loads order from repository', async () => {
+      const orderID = 123;
+      const currentOrder = await store.dispatch(LOAD_ORDER, orderID);
+
+      expect(orderRepositoryGetMock).toHaveBeenCalledWith(orderID);
+      expect(currentOrder).toEqual(orderNotInTheStore);
+    });
+
+    it('doesn\' change the state of the store', async () => {
+      const orderID = 123;
+      await store.dispatch(LOAD_ORDER, orderID);
+
+      expect(store.state.orders).toEqual([order]);
+    });
+  });
+
+  describe('GET_ORDER', () => {
+    beforeEach(async () => {
+      await store.dispatch(LOAD_ORDERS);
+    });
+
+    it('returns proper order if already in the store without calling the repository ', async () => {
+      const currentOrder = await store.dispatch(GET_ORDER, 5572);
+
+      expect(orderRepositoryGetMock).not.toHaveBeenCalled();
+      expect(currentOrder).toEqual(order);
+    });
+
+    it('returns null if order is not in the store ', async () => {
+      const currentOrder = await store.dispatch(GET_ORDER, 123);
+
+      expect(orderRepositoryGetMock).toHaveBeenCalled();
+      expect(currentOrder).toEqual(orderNotInTheStore);
     });
   });
 });

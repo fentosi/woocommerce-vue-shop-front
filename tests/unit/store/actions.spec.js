@@ -24,8 +24,12 @@ describe('Actions', () => {
   let store;
 
   beforeEach(() => {
-    orderRepositoryGetAllMock = jest.spyOn(ordersRepository, 'getAll').mockImplementation(() => [order]);
-    orderRepositoryGetMock = jest.spyOn(ordersRepository, 'get').mockImplementation(() => orderNotInTheStore);
+    orderRepositoryGetAllMock = jest.spyOn(ordersRepository, 'getAll').mockImplementation(() => {
+      return { data: [order] };
+    });
+    orderRepositoryGetMock = jest.spyOn(ordersRepository, 'get').mockImplementation(() => {
+      return { data: orderNotInTheStore };
+    });
     store = createStore();
   });
 
@@ -77,7 +81,7 @@ describe('Actions', () => {
       expect(currentOrder).toEqual(order);
     });
 
-    it('returns null if order is not in the store ', async () => {
+    it('gets order from order repository if order is not in the store ', async () => {
       const currentOrder = await store.dispatch(GET_ORDER, 123);
 
       expect(orderRepositoryGetMock).toHaveBeenCalled();

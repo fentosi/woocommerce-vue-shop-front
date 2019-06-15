@@ -13,14 +13,7 @@ export default {
   },
 
   async [GET_ORDER](store, orderID) {
-    let orders = store.state.orders.filter((order) => {
-      return order.id === orderID;
-    });
-
-    if (orders.length) {
-      return orders.pop();
-    } else {
-      return store.dispatch(LOAD_ORDER, orderID);
-    }
+    let order = store.getters.order(orderID) || store.dispatch(LOAD_ORDER, orderID);
+    return order;
   }
 };

@@ -1,5 +1,5 @@
 <template>
-  <tr>
+  <tr @click="redirectToOrder(id)" style="cursor: pointer">
     <td v-text="id" class="order-id" ></td>
     <td v-text="name" class="order-name"></td>
     <td v-text="payment_method_title" class="order-payment-method"></td>
@@ -26,6 +26,11 @@ export default {
   computed: {
     name() {
       return this.billing.first_name + ' ' + this.billing.last_name;
+    }
+  },
+  methods: {
+    redirectToOrder(orderID) {
+      this.$router.push({ name: 'order', params: { id: orderID } });
     }
   }
 };

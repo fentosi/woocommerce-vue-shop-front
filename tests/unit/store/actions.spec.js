@@ -1,5 +1,6 @@
 import ordersRepository from '../../../src/repositories/orders';
-import { GET_ORDER, LOAD_ORDER, LOAD_ORDERS } from '../../../src/store/actionTypes';
+import productsRepository from '../../../src/repositories/products';
+import { GET_ORDER, LOAD_ORDER, LOAD_ORDERS, LOAD_PRODUCTS } from '../../../src/store/actionTypes'
 import { createStore } from '../../../src/store';
 
 describe('Actions', () => {
@@ -19,8 +20,52 @@ describe('Actions', () => {
     total: '10',
     total_tax: '0'
   };
+  const product = {
+    id: 4877,
+    name: 'Extra Bass Headphones',
+    slug: 'extra-bass-headphones',
+    permalink: 'http://localhost:8888/shop/extra-bass-headphones/',
+    type: 'variable',
+    status: 'publish',
+    short_description: '<p>Description</p>',
+    sku: '015',
+    price: '199',
+    manage_stock: false,
+    stock_quantity: null,
+    stock_status: 'instock',
+    images: [
+      {
+        id: 4878,
+        src: 'http://localhost:8888/wp-content/uploads/2016/07/extra-bass-headphones.jpg',
+        name: 'extra-bass-headphones'
+      }
+    ],
+    attributes: [
+      {
+        id: 1,
+        name: 'Size',
+        position: 0,
+        visible: true,
+        variation: true,
+        options: [
+          'S',
+          'M',
+          'L',
+          'XL'
+        ]
+      }
+    ],
+    variations: [
+      5798,
+      5799,
+      5800,
+      5801
+    ]
+  };
+
   let orderRepositoryGetAllMock;
   let orderRepositoryGetMock;
+  let productRepositoryGetAllMock;
   let store;
 
   beforeEach(() => {
@@ -29,6 +74,10 @@ describe('Actions', () => {
     });
     orderRepositoryGetMock = jest.spyOn(ordersRepository, 'get').mockImplementation(() => {
       return { data: orderNotInTheStore };
+    });
+
+    productRepositoryGetAllMock = jest.spyOn(productsRepository, 'getAll').mockImplementation(() => {
+      return { data: [product] };
     });
     store = createStore();
   });
@@ -86,6 +135,15 @@ describe('Actions', () => {
 
       expect(orderRepositoryGetMock).toHaveBeenCalled();
       expect(currentOrder).toEqual(orderNotInTheStore);
+    });
+  });
+
+  describe('LOAD_PRODUCTS', () => {
+    it('sets proper products ', async () => {
+      const promise = store.dispatch(LOAD_PRODUCTS);
+      await promise;
+
+      expect(store.state.products).toEqual([product]);
     });
   });
 });

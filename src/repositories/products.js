@@ -9,9 +9,20 @@ export default {
   get(productID) {
     return axios.get(this.getUrl(productID));
   },
-  getUrl(id) {
+  getUrl(id, parameters) {
     let url = this.baseUrl + '/' + this.basePath;
 
-    return url + (id ? '/' + id : '');
+    if (id) {
+      url += '/' + id;
+    }
+
+    if (parameters) {
+      url += '?';
+      for (const key of Object.keys(parameters)) {
+        url += encodeURIComponent(key) + '=' + encodeURIComponent(parameters[key]);
+      }
+    }
+
+    return url;
   }
 };

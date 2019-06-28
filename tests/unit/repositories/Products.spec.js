@@ -70,15 +70,29 @@ describe('Products Repository', () => {
     const woocommerceUrl = 'http://localhost';
     const basePath = 'api/products';
 
-    it('getUrl if id is present returns proper url', () => {
-      let expectedUrl = woocommerceUrl + '/' + basePath;
-      expect(productRepository.getUrl()).toBe(expectedUrl);
+    describe('id is not present', () => {
+      it('no parameters returns url', () => {
+        let expectedUrl = woocommerceUrl + '/' + basePath;
+        expect(productRepository.getUrl()).toBe(expectedUrl);
+      });
+
+      it('with parameters returns url with parameters', () => {
+        let expectedUrl = woocommerceUrl + '/' + basePath + '?asd=123';
+        expect(productRepository.getUrl(null, { asd: 123 })).toBe(expectedUrl);
+      });
+
+      it('with parameters returns url with encoded parameters', () => {
+        let expectedUrl = woocommerceUrl + '/' + basePath + '?asd%3Dasd=12%20%2B%203';
+        expect(productRepository.getUrl(null, { 'asd=asd': '12 + 3' })).toBe(expectedUrl);
+      });
     });
 
-    it('getUrl if id is not present returns proper url', () => {
-      const id = 123;
-      const expectedUrl = woocommerceUrl + '/' + basePath + '/' + id;
-      expect(productRepository.getUrl(id)).toBe(expectedUrl);
+    describe('id is present', () => {
+      it('no parameters returns url with id', () => {
+        const id = 123;
+        const expectedUrl = woocommerceUrl + '/' + basePath + '/' + id;
+        expect(productRepository.getUrl(id)).toBe(expectedUrl);
+      });
     });
   });
 });

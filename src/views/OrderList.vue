@@ -23,6 +23,7 @@
 <script>
 import OrderListItem from './OrderListItem';
 import { LOAD_ORDERS } from '../store/actionTypes';
+import { mapState } from 'vuex';
 
 export default {
   name: 'orderList',
@@ -30,9 +31,7 @@ export default {
     OrderListItem
   },
   computed: {
-    orders() {
-      return this.$store.state.orders;
-    }
+    ...mapState(['orders'])
   },
   created() {
     this.loadOrders();

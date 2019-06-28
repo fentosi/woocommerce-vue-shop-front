@@ -2,6 +2,8 @@ import axios from 'axios';
 import productRepository from '../../../src/repositories/products'
 
 describe('Products Repository', () => {
+  const woocommerceUrl = 'http://localhost';
+  const basePath = 'api/products';
   const product = {
     id: 4877,
     name: 'Extra Bass Headphones',
@@ -47,9 +49,10 @@ describe('Products Repository', () => {
 
   it('"getAll" makes a call to productRepository endpoint', () => {
     const spy = jest.spyOn(axios, 'get').mockImplementation(() => [product]);
+    const url = woocommerceUrl + '/' + basePath + '?status=publish';
 
     let ordersData = productRepository.getAll();
-    expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledWith(url);
     expect(ordersData).toEqual([product]);
 
     spy.mockRestore();
@@ -67,9 +70,6 @@ describe('Products Repository', () => {
   });
 
   describe('getUrl', () => {
-    const woocommerceUrl = 'http://localhost';
-    const basePath = 'api/products';
-
     describe('id is not present', () => {
       it('no parameters returns url', () => {
         let expectedUrl = woocommerceUrl + '/' + basePath;

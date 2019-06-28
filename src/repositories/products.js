@@ -4,7 +4,7 @@ export default {
   baseUrl: process.env.VUE_APP_WOOCOMMERCE_URL,
   basePath: 'api/products',
   getAll() {
-    return axios.get(this.getUrl());
+    return axios.get(this.getUrl(null, { status: 'publish' }));
   },
   get(productID) {
     return axios.get(this.getUrl(productID));

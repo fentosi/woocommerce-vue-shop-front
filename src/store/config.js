@@ -4,7 +4,8 @@ import getters from './getters';
 
 export default {
   state: {
-    orders: []
+    orders: [],
+    products: []
   },
   actions,
   mutations,

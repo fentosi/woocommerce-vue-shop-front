@@ -125,5 +125,13 @@ describe('Cart.vue', () => {
         expect(store.commit).toHaveBeenCalledWith(DELETE_ITEM_FROM_CART, expectedParam);
       });
     });
+
+    describe('clearCart', () => {
+      it('calls store', () => {
+        component.vm.clearCart();
+
+        expect(store.commit).toHaveBeenCalledWith(CLEAR_CART);
+      });
+    });
   });
 });

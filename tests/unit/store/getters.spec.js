@@ -10,11 +10,21 @@ describe('Getters', () => {
     total_tax: '0'
   };
 
+  const product = {
+    id: 4877,
+    name: 'Extra Bass Headphones',
+    slug: 'extra-bass-headphones',
+    permalink: 'http://localhost:8888/shop/extra-bass-headphones/',
+    type: 'variable',
+    status: 'publish'
+  };
+
   let store;
 
   beforeEach(() => {
     store = createStore();
     store.state.orders = [order];
+    store.state.products = [product];
   });
 
   describe('order', () => {
@@ -28,6 +38,20 @@ describe('Getters', () => {
       let expectedOrder = store.getters.order(1354);
 
       expect(expectedOrder).toBe(null);
+    });
+  });
+
+  describe('product', () => {
+    it('returns product from store, if exists', () => {
+      const productInStore = store.getters.product(4877);
+
+      expect(productInStore).toEqual(product);
+    });
+
+    it('returns undefined product does not exist in store', () => {
+      const productInStore = store.getters.product(47);
+
+      expect(productInStore).toEqual(undefined);
     });
   });
 });

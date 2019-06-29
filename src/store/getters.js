@@ -9,5 +9,12 @@ export default {
     } else {
       return null;
     }
+  },
+  product: (state) => (productId) => {
+    let item = state.products.filter((product) => {
+      return product.id === productId;
+    });
+
+    return item.pop();
   }
 };

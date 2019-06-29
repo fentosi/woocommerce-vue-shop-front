@@ -1,5 +1,5 @@
 import { createStore } from '../../../src/store';
-import { SET_ORDERS, SET_PRODUCTS, ADD_ITEM_TO_CART } from '../../../src/store/mutationTypes';
+import { SET_ORDERS, SET_PRODUCTS, ADD_ITEM_TO_CART, CLEAR_CART } from '../../../src/store/mutationTypes';
 
 describe('Mutations', () => {
   const order = {
@@ -40,8 +40,23 @@ describe('Mutations', () => {
     });
   });
 
+  describe('CLEAR_CART', () => {
+    it('clears the cart', async () => {
+      store.commit(ADD_ITEM_TO_CART, {
+        productId: 2,
+        quantity: 2
+      });
+
+      store.commit(CLEAR_CART);
+
+      expect(store.state.cart.length).toEqual(0);
+    });
+  });
+
   describe('ADD_ITEM_TO_CART', () => {
     it('adds new product to cart when cart is empty ', async () => {
+      store.commit(CLEAR_CART);
+
       const expectedProduct = {
         productId: 3,
         variationId: 4,
@@ -60,7 +75,7 @@ describe('Mutations', () => {
   });
 
   it('adds new product to cart when cart is not empty ', async () => {
-    store.state.cart = [];
+    store.commit(CLEAR_CART);
 
     const expectedProduct = {
       productId: 3,
@@ -84,7 +99,7 @@ describe('Mutations', () => {
   });
 
   it('adds existing product to cart, updates its quantity', async () => {
-    store.state.cart = [];
+    store.commit(CLEAR_CART);
 
     const expectedCart = [
       {

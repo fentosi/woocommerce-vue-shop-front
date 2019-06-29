@@ -1,4 +1,4 @@
-import { ADD_ITEM_TO_CART, SET_ORDERS, SET_PRODUCTS } from './mutationTypes';
+import { ADD_ITEM_TO_CART, CLEAR_CART, SET_ORDERS, SET_PRODUCTS } from './mutationTypes';
 
 const areCartItemsSame = (firstCartItem, secondCartItem) => firstCartItem.productId === secondCartItem.productId &&
   firstCartItem.variationId === secondCartItem.variationId;
@@ -36,5 +36,9 @@ export default {
         quantity
       });
     }
+  },
+
+  [CLEAR_CART](state) {
+    state.cart = [];
   }
 };

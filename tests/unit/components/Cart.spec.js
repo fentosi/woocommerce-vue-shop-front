@@ -1,7 +1,7 @@
 import { shallowMount } from '@vue/test-utils';
 import Cart from '../../../src/components/Cart';
 import { createStore } from '../../../src/store';
-import { CLEAR_CART } from '../../../src/store/mutationTypes';
+import { ADD_ITEM_TO_CART, CLEAR_CART, REMOVE_ITEM_FROM_CART } from '../../../src/store/mutationTypes';
 
 describe('Cart.vue', () => {
   let store;
@@ -58,6 +58,51 @@ describe('Cart.vue', () => {
       ];
 
       expect(component.vm.totalPrice).toEqual(39.99);
+    });
+  });
+
+  describe('methods', () => {
+    beforeEach(() => {
+      store = createStore();
+      jest.spyOn(store, 'commit');
+      component = shallowMount(Cart, {
+        mocks: {
+          $store: store
+        }
+      });
+    });
+
+    describe('addItemToCart', () => {
+      it('calls store', () => {
+        let expectedParam = {
+          productId: 2,
+          variationId: 3,
+          quantity: 1
+        };
+
+        component.vm.addItemToCart({
+          id: expectedParam.productId,
+          variationId: expectedParam.variationId
+        });
+
+        expect(store.commit).toHaveBeenCalledWith(ADD_ITEM_TO_CART, expectedParam);
+      });
+    });
+
+    describe('removeItemFromCart', () => {
+      it('calls store', () => {
+        let expectedParam = {
+          productId: 2,
+          variationId: 3
+        };
+
+        component.vm.removeItemFromCart({
+          id: expectedParam.productId,
+          variationId: expectedParam.variationId
+        });
+
+        expect(store.commit).toHaveBeenCalledWith(REMOVE_ITEM_FROM_CART, expectedParam);
+      });
     });
   });
 });

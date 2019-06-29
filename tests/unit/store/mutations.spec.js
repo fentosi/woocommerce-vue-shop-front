@@ -1,5 +1,5 @@
-import { createStore } from '../../../src/store'
-import { SET_ORDERS, SET_PRODUCTS } from '../../../src/store/mutationTypes'
+import { createStore } from '../../../src/store';
+import { SET_ORDERS, SET_PRODUCTS, ADD_ITEM_TO_CART } from '../../../src/store/mutationTypes';
 
 describe('Mutations', () => {
   const order = {
@@ -38,5 +38,84 @@ describe('Mutations', () => {
 
       expect(store.state.products).toEqual(product);
     });
+  });
+
+  describe('ADD_ITEM_TO_CART', () => {
+    it('adds new product to cart when cart is empty ', async () => {
+      const expectedProduct = {
+        productId: 3,
+        variationId: 4,
+        quantity: 2
+      };
+
+      store.commit(ADD_ITEM_TO_CART, {
+        productId: expectedProduct.productId,
+        variationId: expectedProduct.variationId,
+        quantity: expectedProduct.quantity
+      });
+
+      const lastProductInCart = store.state.cart[store.state.cart.length - 1];
+      expect(lastProductInCart).toEqual(expectedProduct);
+    });
+  });
+
+  it('adds new product to cart when cart is not empty ', async () => {
+    store.state.cart = [];
+
+    const expectedProduct = {
+      productId: 3,
+      variationId: 4,
+      quantity: 2
+    };
+
+    store.commit(ADD_ITEM_TO_CART, {
+      productId: 2,
+      quantity: 2
+    });
+
+    store.commit(ADD_ITEM_TO_CART, {
+      productId: expectedProduct.productId,
+      variationId: expectedProduct.variationId,
+      quantity: expectedProduct.quantity
+    });
+
+    const lastProductInCart = store.state.cart[store.state.cart.length - 1];
+    expect(lastProductInCart).toEqual(expectedProduct);
+  });
+
+  it('adds existing product to cart, updates its quantity', async () => {
+    store.state.cart = [];
+
+    const expectedCart = [
+      {
+        productId: 3,
+        variationId: 4,
+        quantity: 2
+      },
+      {
+        productId: 2,
+        variationId: undefined,
+        quantity: 2
+      }
+    ];
+
+    store.commit(ADD_ITEM_TO_CART, {
+      productId: 3,
+      variationId: 4,
+      quantity: 1
+    });
+
+    store.commit(ADD_ITEM_TO_CART, {
+      productId: 2,
+      quantity: 2
+    });
+
+    store.commit(ADD_ITEM_TO_CART, {
+      productId: 3,
+      variationId: 4,
+      quantity: 1
+    });
+
+    expect(store.state.cart).toEqual(expectedCart);
   });
 });

@@ -1,7 +1,12 @@
 import { shallowMount } from '@vue/test-utils';
 import Cart from '../../../src/components/Cart';
 import { createStore } from '../../../src/store';
-import { ADD_ITEM_TO_CART, CLEAR_CART, REMOVE_ITEM_FROM_CART } from '../../../src/store/mutationTypes';
+import {
+  ADD_ITEM_TO_CART,
+  CLEAR_CART,
+  DELETE_ITEM_FROM_CART,
+  REMOVE_ITEM_FROM_CART
+} from '../../../src/store/mutationTypes';
 
 describe('Cart.vue', () => {
   let store;
@@ -102,6 +107,22 @@ describe('Cart.vue', () => {
         });
 
         expect(store.commit).toHaveBeenCalledWith(REMOVE_ITEM_FROM_CART, expectedParam);
+      });
+    });
+
+    describe('deleteItemFromCart', () => {
+      it('calls store', () => {
+        let expectedParam = {
+          productId: 2,
+          variationId: 3
+        };
+
+        component.vm.deleteItemFromCart({
+          id: expectedParam.productId,
+          variationId: expectedParam.variationId
+        });
+
+        expect(store.commit).toHaveBeenCalledWith(DELETE_ITEM_FROM_CART, expectedParam);
       });
     });
   });

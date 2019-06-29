@@ -3,9 +3,12 @@
     <h3>Cart</h3>
     <template v-for="cartItem in cartItems">
       <div class="row" v-bind:key="cartItem.id">
+        <div class="col-sm-1">
+          <font-awesome-icon icon="trash" size="lg" v-on:click="deleteItemFromCart(cartItem)" />
+        </div>
         <div class="col-sm-2">{{cartItem.quantity}} x</div>
         <div class="col-sm-5">{{cartItem.name}}</div>
-        <div class="col-sm-3 text-right">{{cartItem.price}}</div>
+        <div class="col-sm-2 text-right">{{cartItem.price}}</div>
         <div class="col-sm-2">
           <font-awesome-icon icon="plus-square" size="2x" v-on:click="addItemToCart(cartItem)" />
           &nbsp;
@@ -22,7 +25,7 @@
 <script>
 
 import { mapState } from 'vuex';
-import { ADD_ITEM_TO_CART, REMOVE_ITEM_FROM_CART } from '../store/mutationTypes';
+import { ADD_ITEM_TO_CART, DELETE_ITEM_FROM_CART, REMOVE_ITEM_FROM_CART } from '../store/mutationTypes';
 
 export default {
   name: 'cart',
@@ -63,6 +66,12 @@ export default {
     },
     removeItemFromCart(item) {
       this.$store.commit(REMOVE_ITEM_FROM_CART, {
+        productId: item.id,
+        variationId: item.variationId
+      });
+    },
+    deleteItemFromCart(item) {
+      this.$store.commit(DELETE_ITEM_FROM_CART, {
         productId: item.id,
         variationId: item.variationId
       });

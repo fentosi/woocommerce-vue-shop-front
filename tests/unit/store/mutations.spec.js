@@ -1,5 +1,11 @@
 import { createStore } from '../../../src/store';
-import { SET_ORDERS, SET_PRODUCTS, ADD_ITEM_TO_CART, CLEAR_CART } from '../../../src/store/mutationTypes';
+import {
+  SET_ORDERS,
+  SET_PRODUCTS,
+  ADD_ITEM_TO_CART,
+  CLEAR_CART,
+  REMOVE_ITEM_FROM_CART
+} from '../../../src/store/mutationTypes';
 
 describe('Mutations', () => {
   const order = {
@@ -126,6 +132,84 @@ describe('Mutations', () => {
         productId: 3,
         variationId: 4,
         quantity: 1
+      });
+
+      expect(store.state.cart).toEqual(expectedCart);
+    });
+  });
+
+  describe('REMOVES_ITEM_FROM_CART', () => {
+    beforeEach(() => {
+      store.commit(CLEAR_CART);
+
+      store.commit(ADD_ITEM_TO_CART, {
+        productId: 2,
+        quantity: 2
+      });
+
+      store.commit(ADD_ITEM_TO_CART, {
+        productId: 3,
+        variationId: 4,
+        quantity: 1
+      });
+    });
+
+    it('removes existing product from cart if quantity is 1', async () => {
+      const expectedCart = [
+        {
+          productId: 2,
+          variationId: undefined,
+          quantity: 2
+        }
+      ];
+
+      store.commit(REMOVE_ITEM_FROM_CART, {
+        productId: 3,
+        variationId: 4
+      });
+
+      expect(store.state.cart).toEqual(expectedCart);
+    });
+
+    it('decreases quantity if quantity is greater than 1', async () => {
+      const expectedCart = [
+        {
+          productId: 2,
+          variationId: undefined,
+          quantity: 1
+        },
+        {
+          productId: 3,
+          variationId: 4,
+          quantity: 1
+        }
+      ];
+
+      store.commit(REMOVE_ITEM_FROM_CART, {
+        productId: 2,
+        variationId: undefined
+      });
+
+      expect(store.state.cart).toEqual(expectedCart);
+    });
+
+    it('does not change cart if the given product is not in the cart', async () => {
+      const expectedCart = [
+        {
+          productId: 2,
+          variationId: undefined,
+          quantity: 2
+        },
+        {
+          productId: 3,
+          variationId: 4,
+          quantity: 1
+        }
+      ];
+
+      store.commit(REMOVE_ITEM_FROM_CART, {
+        productId: 5,
+        variationId: 6
       });
 
       expect(store.state.cart).toEqual(expectedCart);

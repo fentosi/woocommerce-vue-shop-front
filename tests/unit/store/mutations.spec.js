@@ -54,9 +54,11 @@ describe('Mutations', () => {
   });
 
   describe('ADD_ITEM_TO_CART', () => {
-    it('adds new product to cart when cart is empty ', async () => {
+    beforeEach(() => {
       store.commit(CLEAR_CART);
+    });
 
+    it('adds new product to cart when cart is empty ', async () => {
       const expectedProduct = {
         productId: 3,
         variationId: 4,
@@ -72,65 +74,61 @@ describe('Mutations', () => {
       const lastProductInCart = store.state.cart[store.state.cart.length - 1];
       expect(lastProductInCart).toEqual(expectedProduct);
     });
-  });
 
-  it('adds new product to cart when cart is not empty ', async () => {
-    store.commit(CLEAR_CART);
-
-    const expectedProduct = {
-      productId: 3,
-      variationId: 4,
-      quantity: 2
-    };
-
-    store.commit(ADD_ITEM_TO_CART, {
-      productId: 2,
-      quantity: 2
-    });
-
-    store.commit(ADD_ITEM_TO_CART, {
-      productId: expectedProduct.productId,
-      variationId: expectedProduct.variationId,
-      quantity: expectedProduct.quantity
-    });
-
-    const lastProductInCart = store.state.cart[store.state.cart.length - 1];
-    expect(lastProductInCart).toEqual(expectedProduct);
-  });
-
-  it('adds existing product to cart, updates its quantity', async () => {
-    store.commit(CLEAR_CART);
-
-    const expectedCart = [
-      {
+    it('adds new product to cart when cart is not empty ', async () => {
+      const expectedProduct = {
         productId: 3,
         variationId: 4,
         quantity: 2
-      },
-      {
+      };
+
+      store.commit(ADD_ITEM_TO_CART, {
         productId: 2,
-        variationId: undefined,
         quantity: 2
-      }
-    ];
+      });
 
-    store.commit(ADD_ITEM_TO_CART, {
-      productId: 3,
-      variationId: 4,
-      quantity: 1
+      store.commit(ADD_ITEM_TO_CART, {
+        productId: expectedProduct.productId,
+        variationId: expectedProduct.variationId,
+        quantity: expectedProduct.quantity
+      });
+
+      const lastProductInCart = store.state.cart[store.state.cart.length - 1];
+      expect(lastProductInCart).toEqual(expectedProduct);
     });
 
-    store.commit(ADD_ITEM_TO_CART, {
-      productId: 2,
-      quantity: 2
-    });
+    it('adds existing product to cart, updates its quantity', async () => {
+      const expectedCart = [
+        {
+          productId: 3,
+          variationId: 4,
+          quantity: 2
+        },
+        {
+          productId: 2,
+          variationId: undefined,
+          quantity: 2
+        }
+      ];
 
-    store.commit(ADD_ITEM_TO_CART, {
-      productId: 3,
-      variationId: 4,
-      quantity: 1
-    });
+      store.commit(ADD_ITEM_TO_CART, {
+        productId: 3,
+        variationId: 4,
+        quantity: 1
+      });
 
-    expect(store.state.cart).toEqual(expectedCart);
+      store.commit(ADD_ITEM_TO_CART, {
+        productId: 2,
+        quantity: 2
+      });
+
+      store.commit(ADD_ITEM_TO_CART, {
+        productId: 3,
+        variationId: 4,
+        quantity: 1
+      });
+
+      expect(store.state.cart).toEqual(expectedCart);
+    });
   });
 });

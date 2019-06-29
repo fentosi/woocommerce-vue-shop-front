@@ -3,7 +3,7 @@
     <h1>New Order</h1>
     <div class="row">
       <div class="col-md-8">
-        <h3>Product items</h3>
+        <h3>Product items <button class="btn btn-secondary btn-sm" v-on:click="loadProducts">Refresh</button></h3>
         <template v-for="product in products">
           <order-new-item v-bind="product" v-bind:key="product.id" />
         </template>

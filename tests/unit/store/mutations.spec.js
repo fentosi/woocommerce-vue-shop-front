@@ -4,7 +4,7 @@ import {
   SET_PRODUCTS,
   ADD_ITEM_TO_CART,
   CLEAR_CART,
-  REMOVE_ITEM_FROM_CART
+  REMOVE_ITEM_FROM_CART, DELETE_ITEM_FROM_CART
 } from '../../../src/store/mutationTypes';
 
 describe('Mutations', () => {
@@ -215,4 +215,39 @@ describe('Mutations', () => {
       expect(store.state.cart).toEqual(expectedCart);
     });
   });
+
+  describe('DELETE_ITEM_FROM_CART', () => {
+    beforeEach(() => {
+      store.commit(CLEAR_CART);
+
+      store.commit(ADD_ITEM_TO_CART, {
+        productId: 2,
+        quantity: 2
+      });
+
+      store.commit(ADD_ITEM_TO_CART, {
+        productId: 3,
+        variationId: 4,
+        quantity: 1
+      });
+    });
+
+    it('deletes product from cart', async () => {
+      const expectedCart = [
+        {
+          productId: 2,
+          variationId: undefined,
+          quantity: 2
+        }
+      ];
+
+      store.commit(DELETE_ITEM_FROM_CART, {
+        productId: 3,
+        variationId: 4
+      });
+
+      expect(store.state.cart).toEqual(expectedCart);
+    });
+  });
+
 });

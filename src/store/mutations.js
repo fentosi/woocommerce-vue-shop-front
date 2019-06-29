@@ -1,4 +1,11 @@
-import { ADD_ITEM_TO_CART, CLEAR_CART, REMOVE_ITEM_FROM_CART, SET_ORDERS, SET_PRODUCTS } from './mutationTypes';
+import {
+  ADD_ITEM_TO_CART,
+  CLEAR_CART,
+  DELETE_ITEM_FROM_CART,
+  REMOVE_ITEM_FROM_CART,
+  SET_ORDERS,
+  SET_PRODUCTS
+} from './mutationTypes';
 
 const areCartItemsSame = (firstCartItem, secondCartItem) => firstCartItem.productId === secondCartItem.productId &&
   firstCartItem.variationId === secondCartItem.variationId;
@@ -51,6 +58,23 @@ export default {
         if (itemInCart.quantity <= 0) {
           state.cart.splice(index, 1);
         }
+
+        return true;
+      }
+
+      return false;
+    });
+  },
+
+  [DELETE_ITEM_FROM_CART](state, { productId, variationId }) {
+    const cartItem = {
+      productId,
+      variationId
+    };
+
+    state.cart.some((itemInCart, index) => {
+      if (areCartItemsSame(itemInCart, cartItem)) {
+        state.cart.splice(index, 1);
 
         return true;
       }

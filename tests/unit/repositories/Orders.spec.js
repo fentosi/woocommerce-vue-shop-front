@@ -12,26 +12,29 @@ describe('Orders Repository', () => {
     total: '180',
     total_tax: '0'
   };
+  let spy;
 
-  it('"getAll" makes a call to ordersRepository endpoint', () => {
-    const spy = jest.spyOn(axios, 'get').mockImplementation(() => [order]);
-
-    let ordersData = ordersRepository.getAll();
-    expect(spy).toHaveBeenCalled();
-    expect(ordersData).toEqual([order]);
-
+  afterEach(() => {
     spy.mockRestore();
   });
 
-  it('"get" makes a call to ordersRepository endpoint with proper url', () => {
+  it('"getAll" makes a call to orders endpoint', () => {
+    const expectedUrl = woocommerceUrl + '/' + basePath;
+    spy = jest.spyOn(axios, 'get').mockImplementation(() => [order]);
+
+    let ordersData = ordersRepository.getAll();
+    expect(spy).toHaveBeenCalledWith(expectedUrl);
+    expect(ordersData).toEqual([order]);
+  });
+
+  it('"get" makes a call to orders endpoint with proper url', () => {
     const id = 123;
-    const spy = jest.spyOn(axios, 'get').mockImplementation(() => order);
+    const expectedUrl = woocommerceUrl + '/' + basePath + '/' + id;
+    spy = jest.spyOn(axios, 'get').mockImplementation(() => order);
 
     let ordersData = ordersRepository.get(id);
-    expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledWith(expectedUrl);
     expect(ordersData).toEqual(order);
-
-    spy.mockRestore();
   });
 
   it('"create" makes a call to orders endpoint with proper url', () => {
@@ -39,13 +42,11 @@ describe('Orders Repository', () => {
     const data = {
       something: 'data'
     };
-    const spy = jest.spyOn(axios, 'post');
+    spy = jest.spyOn(axios, 'post');
 
     ordersRepository.create(data);
 
     expect(axios.post).toHaveBeenCalledWith(expectedUrl, data);
-
-    spy.mockRestore();
   });
 
   describe('getUrl', () => {

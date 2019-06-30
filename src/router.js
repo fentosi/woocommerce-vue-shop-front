@@ -15,13 +15,14 @@ export default new Router({
     },
     {
       path: '/orders/new',
-      name: 'order',
+      name: 'orderNew',
       component: () => import('./views/OrderNew.vue')
     },
     {
       path: '/orders/:id',
       name: 'order',
       component: Order
-    }
+    },
+    { path: '*', redirect: '/orders/new' }
   ]
 });

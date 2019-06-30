@@ -10,6 +10,9 @@
             <order-new-item v-bind="product" v-bind:key="product.id" />
           </template>
         </div>
+        <div v-else>
+          No available products
+        </div>
       </div>
       <div class="col-md-4">
         <cart />

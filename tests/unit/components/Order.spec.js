@@ -2,11 +2,15 @@ import { shallowMount } from '@vue/test-utils';
 import Order from '../../../src/views/Order';
 import { createStore } from '../../../src/store';
 import { GET_ORDER } from '../../../src/store/actionTypes';
+import { SET_ERROR } from '../../../src/store/mutationTypes';
+import Loader from '../../../src/components/Loader';
 
 describe('Order.vue', () => {
   let component;
   let store;
   let spy;
+  let storeCommitSpy;
+
   const order = {
     id: 123,
     billing: {
@@ -43,7 +47,7 @@ describe('Order.vue', () => {
   beforeEach(() => {
     store = createStore();
     store.state.orders = [order];
-
+    storeCommitSpy = jest.spyOn(store, 'commit');
     spy = jest.spyOn(store, 'dispatch').mockImplementation(() => order);
 
     component = shallowMount(Order, {
@@ -64,5 +68,25 @@ describe('Order.vue', () => {
 
   it('renders line items', () => {
     expect(component.findAll('.line-item').length).toBe(order.line_items.length);
+  });
+
+  it('sets loading on loadOrder', async () => {
+    const promise = component.vm.loadOrder();
+
+    expect(component.vm.isLoading).toEqual(true);
+    expect(component.contains(Loader)).toBe(true);
+
+    await promise;
+
+    expect(component.vm.isLoading).toEqual(false);
+    expect(component.contains(Loader)).toBe(false);
+  });
+
+  it('sets error if loading is failed', async () => {
+    spy = jest.spyOn(store, 'dispatch').mockImplementation(() => { throw new Error(); });
+
+    await component.vm.loadOrder();
+
+    expect(storeCommitSpy).toHaveBeenCalledWith(SET_ERROR, 'Something went wrong');
   });
 });

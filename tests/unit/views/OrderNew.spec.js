@@ -3,11 +3,15 @@ import { createStore } from '../../../src/store';
 import OrderNew from '../../../src/views/OrderNew';
 import OrderNewItem from '../../../src/components/OrderNewItem';
 import productsRepository from '../../../src/repositories/products';
+import Loader from '../../../src/components/Loader';
+import { SET_ERROR } from '../../../src/store/mutationTypes';
+jest.mock('../../../src/repositories/products');
 
 describe('OrderNew.vue', () => {
   let component;
   let store;
   let productRepositoryGetAllMock;
+  let storeCommitSpy;
 
   const product = {
     id: 4877,
@@ -53,10 +57,14 @@ describe('OrderNew.vue', () => {
   };
 
   beforeEach(() => {
-    productRepositoryGetAllMock = jest.spyOn(productsRepository, 'getAll').mockImplementation(() => {
+    productRepositoryGetAllMock = jest.spyOn(productsRepository, 'getAll').mockImplementationOnce(() => {
       return { data: [product] };
+    }).mockImplementationOnce(() => {
+      throw new Error();
     });
+
     store = createStore();
+    storeCommitSpy = jest.spyOn(store, 'commit').mockImplementation();
     store.state.products = [product];
     component = shallowMount(OrderNew, {
       mocks: {
@@ -65,11 +73,34 @@ describe('OrderNew.vue', () => {
     });
   });
 
+  afterEach(() => {
+    productRepositoryGetAllMock.mockReset();
+    storeCommitSpy.mockRestore();
+  });
+
   it('renders OrderNewItem list items', () => {
     expect(component.contains(OrderNewItem)).toBe(true);
   });
 
   it('loads products on created hook', () => {
     expect(productRepositoryGetAllMock).toHaveBeenCalled();
+  });
+
+  it('sets loading on loadProducts', async () => {
+    const promise = component.vm.loadProducts();
+
+    expect(component.vm.isLoading).toEqual(true);
+    expect(component.contains(Loader)).toBe(true);
+
+    await promise;
+
+    expect(component.vm.isLoading).toEqual(false);
+    expect(component.contains(Loader)).toBe(false);
+  });
+
+  it('sets error if loading is failed', async () => {
+    await component.vm.loadProducts();
+
+    expect(storeCommitSpy).toHaveBeenCalledWith(SET_ERROR, 'Something went wrong');
   });
 });

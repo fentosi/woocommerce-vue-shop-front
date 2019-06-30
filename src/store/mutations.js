@@ -3,8 +3,10 @@ import {
   CLEAR_CART,
   DELETE_ITEM_FROM_CART,
   REMOVE_ITEM_FROM_CART,
+  SET_ERROR,
   SET_ORDERS,
-  SET_PRODUCTS
+  SET_PRODUCTS,
+  UNSET_ERROR
 } from './mutationTypes';
 
 const areCartItemsSame = (firstCartItem, secondCartItem) => firstCartItem.productId === secondCartItem.productId &&
@@ -17,6 +19,14 @@ export default {
 
   [SET_PRODUCTS](state, products) {
     state.products = products;
+  },
+
+  [SET_ERROR](state, error) {
+    state.error = error;
+  },
+
+  [UNSET_ERROR](state) {
+    state.error = null;
   },
 
   [ADD_ITEM_TO_CART](state, { productId, variationId, quantity }) {

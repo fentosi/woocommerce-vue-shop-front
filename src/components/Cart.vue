@@ -38,7 +38,13 @@
 <script>
 
 import { mapState } from 'vuex';
-import { ADD_ITEM_TO_CART, CLEAR_CART, DELETE_ITEM_FROM_CART, REMOVE_ITEM_FROM_CART } from '../store/mutationTypes';
+import {
+  ADD_ITEM_TO_CART,
+  CLEAR_CART,
+  DELETE_ITEM_FROM_CART,
+  REMOVE_ITEM_FROM_CART,
+  SET_ERROR
+} from '../store/mutationTypes';
 import { createOrderData } from '../libs/createOrderData';
 import ordersRepository from '../repositories/orders';
 
@@ -105,7 +111,7 @@ export default {
         await ordersRepository.create(createOrderData(this.cart));
         this.$store.commit(CLEAR_CART);
       } catch (e) {
-        console.log(e);
+        this.$store.commit(SET_ERROR, 'Something went wrong');
       } finally {
         this.isSubmitting = false;
       }

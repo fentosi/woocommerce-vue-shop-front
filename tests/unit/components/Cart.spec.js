@@ -5,7 +5,7 @@ import {
   ADD_ITEM_TO_CART,
   CLEAR_CART,
   DELETE_ITEM_FROM_CART,
-  REMOVE_ITEM_FROM_CART
+  REMOVE_ITEM_FROM_CART, SET_ERROR
 } from '../../../src/store/mutationTypes';
 import ordersRepository from '../../../src/repositories/orders';
 jest.mock('../../../src/repositories/orders');
@@ -204,6 +204,16 @@ describe('Cart.vue', () => {
         component.vm.submitCart();
 
         expect(storeCommitSpy).toHaveBeenCalledWith(CLEAR_CART);
+      });
+
+      it('sets error if submitting is failed', async () => {
+        spy = jest.spyOn(ordersRepository, 'create').mockImplementation(() => {
+          throw new Error();
+        });
+
+        component.vm.submitCart();
+
+        expect(storeCommitSpy).toHaveBeenCalledWith(SET_ERROR, 'Something went wrong');
       });
     });
   });

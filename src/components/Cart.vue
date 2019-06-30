@@ -24,7 +24,9 @@
         <div class="col-sm-6">
           <button class="btn btn-secondary" v-on:click="clearCart">Clear</button>
         </div>
-        <div class="col-sm-6"></div>
+        <div class="col-sm-6 text-right">
+          <button class="btn btn-primary submit" v-on:click="submitCart" :disabled="isSubmitting">Submit</button>
+        </div>
       </div>
     </div>
     <div v-else>
@@ -37,9 +39,16 @@
 
 import { mapState } from 'vuex';
 import { ADD_ITEM_TO_CART, CLEAR_CART, DELETE_ITEM_FROM_CART, REMOVE_ITEM_FROM_CART } from '../store/mutationTypes';
+import { createOrderData } from '../libs/createOrderData';
+import ordersRepository from '../repositories/orders';
 
 export default {
   name: 'cart',
+  data() {
+    return {
+      isSubmitting: false
+    };
+  },
   computed: {
     ...mapState(['cart']),
     cartItems() {
@@ -89,6 +98,17 @@ export default {
     },
     clearCart() {
       this.$store.commit(CLEAR_CART);
+    },
+    async submitCart() {
+      this.isSubmitting = true;
+      try {
+        await ordersRepository.create(createOrderData(this.cart));
+        this.$store.commit(CLEAR_CART);
+      } catch (e) {
+        console.log(e);
+      } finally {
+        this.isSubmitting = false;
+      }
     }
   }
 };

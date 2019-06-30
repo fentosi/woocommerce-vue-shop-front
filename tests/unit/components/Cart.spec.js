@@ -7,13 +7,17 @@ import {
   DELETE_ITEM_FROM_CART,
   REMOVE_ITEM_FROM_CART
 } from '../../../src/store/mutationTypes';
+import ordersRepository from '../../../src/repositories/orders';
+jest.mock('../../../src/repositories/orders');
 
 describe('Cart.vue', () => {
   let store;
   let component;
+  let storeCommitSpy;
 
   beforeEach(() => {
     store = createStore();
+    storeCommitSpy = jest.spyOn(store, 'commit');
     store.state.products = [
       { id: 1, name: 'product 1', price: '19.99' },
       { id: 2, name: 'product 2', price: '9.99' },
@@ -69,7 +73,7 @@ describe('Cart.vue', () => {
   describe('methods', () => {
     beforeEach(() => {
       store = createStore();
-      jest.spyOn(store, 'commit');
+      storeCommitSpy = jest.spyOn(store, 'commit');
       component = shallowMount(Cart, {
         mocks: {
           $store: store
@@ -110,6 +114,21 @@ describe('Cart.vue', () => {
       });
     });
 
+    it('enables/disables submit button according to isSubmitting data', () => {
+      component.vm.$store.state.cart = [
+        { productId: 1, variationId: null, quantity: 1 },
+        { productId: 3, variationId: null, quantity: 2 }
+      ];
+
+      expect(component.find('button.submit').attributes('disabled')).toBe(undefined);
+
+      component.vm.isSubmitting = true;
+      expect(component.find('button.submit').attributes('disabled')).toBe('disabled');
+
+      component.vm.isSubmitting = false;
+      expect(component.find('button.submit').attributes('disabled')).toBe(undefined);
+    });
+
     describe('deleteItemFromCart', () => {
       it('calls store', () => {
         let expectedParam = {
@@ -131,6 +150,60 @@ describe('Cart.vue', () => {
         component.vm.clearCart();
 
         expect(store.commit).toHaveBeenCalledWith(CLEAR_CART);
+      });
+    });
+
+    describe('submitCart', () => {
+      let spy;
+      const cart = [
+        {
+          'productId': 1,
+          'variationId': null,
+          'quantity': 2
+        },
+        {
+          'productId': 2,
+          'variationId': null,
+          'quantity': 1
+        }];
+
+      beforeEach(() => {
+        component.vm.clearCart();
+        store.state.cart = cart;
+      });
+
+      afterEach(() => {
+        if (spy) {
+          spy.mockRestore();
+        }
+      });
+
+      it('calls repository to create an order', () => {
+        const expectedData = {
+          set_paid: true,
+          line_items: cart
+        };
+
+        spy = jest.spyOn(ordersRepository, 'create');
+
+        component.vm.submitCart();
+
+        expect(spy).toHaveBeenCalledWith(expectedData);
+      });
+
+      it('sets isSubmitting', async () => {
+        spy = jest.spyOn(ordersRepository, 'create');
+
+        const promise = component.vm.submitCart();
+        expect(component.vm.isSubmitting).toEqual(true);
+        await promise;
+        expect(component.vm.isSubmitting).toEqual(false);
+      });
+
+      it('calls clear cart on successful submit', () => {
+        component.vm.submitCart();
+
+        expect(storeCommitSpy).toHaveBeenCalledWith(CLEAR_CART);
       });
     });
   });

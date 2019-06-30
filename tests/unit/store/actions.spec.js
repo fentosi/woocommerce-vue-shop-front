@@ -1,7 +1,9 @@
 import ordersRepository from '../../../src/repositories/orders';
 import productsRepository from '../../../src/repositories/products';
-import { GET_ORDER, LOAD_ORDER, LOAD_ORDERS, LOAD_PRODUCTS } from '../../../src/store/actionTypes'
+import { GET_ORDER, LOAD_ORDER, LOAD_ORDERS, LOAD_PRODUCTS } from '../../../src/store/actionTypes';
 import { createStore } from '../../../src/store';
+jest.mock('../../../src/repositories/orders');
+jest.mock('../../../src/repositories/products');
 
 describe('Actions', () => {
   const order = {
@@ -140,7 +142,15 @@ describe('Actions', () => {
 
   describe('LOAD_PRODUCTS', () => {
     it('sets proper products ', async () => {
+      await store.dispatch(LOAD_PRODUCTS);
+      expect(store.state.products).toEqual([product]);
+    });
+
+    it('clears products before loading', async () => {
       const promise = store.dispatch(LOAD_PRODUCTS);
+
+      expect(store.state.products).toEqual([]);
+
       await promise;
 
       expect(store.state.products).toEqual([product]);

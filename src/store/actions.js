@@ -1,7 +1,7 @@
-import { GET_ORDER, LOAD_ORDER, LOAD_ORDERS, LOAD_PRODUCTS } from './actionTypes'
+import { GET_ORDER, LOAD_ORDER, LOAD_ORDERS, LOAD_PRODUCTS } from './actionTypes';
 import ordersRepository from '../repositories/orders';
 import { SET_ORDERS, SET_PRODUCTS } from './mutationTypes';
-import productRepository from '../repositories/products'
+import productRepository from '../repositories/products';
 
 export default {
   async [LOAD_ORDERS](store) {
@@ -19,7 +19,8 @@ export default {
   },
 
   async [LOAD_PRODUCTS](store) {
+    store.commit(SET_PRODUCTS, []);
     const products = await productRepository.getAll();
     store.commit(SET_PRODUCTS, products.data);
-  },
+  }
 };

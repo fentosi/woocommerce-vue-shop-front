@@ -9,6 +9,9 @@ export default {
   get(orderID) {
     return axios.get(this.getUrl(orderID));
   },
+  create(data) {
+    return axios.post(this.getUrl(), data);
+  },
   getUrl(id) {
     let url = this.baseUrl + '/' + this.basePath;
 

@@ -2,6 +2,8 @@ import ordersRepository from '../../../src/repositories/orders';
 import axios from 'axios';
 
 describe('Orders Repository', () => {
+  const woocommerceUrl = 'http://localhost';
+  const basePath = 'api/orders';
   const order = {
     id: 5572,
     status: 'on-hold',
@@ -32,9 +34,21 @@ describe('Orders Repository', () => {
     spy.mockRestore();
   });
 
+  it('"create" makes a call to orders endpoint with proper url', () => {
+    const expectedUrl = woocommerceUrl + '/' + basePath;
+    const data = {
+      something: 'data'
+    };
+    const spy = jest.spyOn(axios, 'post');
+
+    ordersRepository.create(data);
+
+    expect(axios.post).toHaveBeenCalledWith(expectedUrl, data);
+
+    spy.mockRestore();
+  });
+
   describe('getUrl', () => {
-    const woocommerceUrl = 'http://localhost';
-    const basePath = 'api/orders';
     it('getUrl if id is present returns proper url', () => {
       let expectedUrl = woocommerceUrl + '/' + basePath;
       expect(ordersRepository.getUrl()).toBe(expectedUrl);

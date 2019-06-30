@@ -6,7 +6,8 @@ export default {
   state: {
     orders: [],
     products: [],
-    cart: []
+    cart: [],
+    error: null
   },
   actions,
   mutations,

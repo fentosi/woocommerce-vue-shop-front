@@ -55,8 +55,10 @@ describe('OrderNew.vue', () => {
       5801
     ]
   };
+  const productList = {};
 
   beforeEach(() => {
+    productList[product.id] = product;
     productRepositoryGetAllMock = jest.spyOn(productsRepository, 'getAll').mockImplementationOnce(() => {
       return { data: [product] };
     }).mockImplementationOnce(() => {

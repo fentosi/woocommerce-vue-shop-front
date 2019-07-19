@@ -141,19 +141,26 @@ describe('Actions', () => {
   });
 
   describe('LOAD_PRODUCTS', () => {
+    const expectedProducts = {};
+
+    beforeEach(() => {
+      expectedProducts[product.id] = product;
+    });
+
     it('sets proper products ', async () => {
       await store.dispatch(LOAD_PRODUCTS);
-      expect(store.state.products).toEqual([product]);
+
+      expect(store.state.products).toEqual(expectedProducts);
     });
 
     it('clears products before loading', async () => {
       const promise = store.dispatch(LOAD_PRODUCTS);
 
-      expect(store.state.products).toEqual([]);
+      expect(store.state.products).toEqual({});
 
       await promise;
 
-      expect(store.state.products).toEqual([product]);
+      expect(store.state.products).toEqual(expectedProducts);
     });
   });
 });

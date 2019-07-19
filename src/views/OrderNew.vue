@@ -5,7 +5,7 @@
       <div class="col-md-8">
         <h3>Product items <button class="btn btn-secondary btn-sm" v-on:click="loadProducts">Refresh</button></h3>
         <loader v-if="isLoading" />
-        <div v-else-if="products.length > 0">
+        <div v-else-if="products">
           <template v-for="product in products">
             <order-new-item v-bind="product" v-bind:key="product.id" />
           </template>

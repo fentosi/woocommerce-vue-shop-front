@@ -19,8 +19,16 @@ export default {
   },
 
   async [LOAD_PRODUCTS](store) {
-    store.commit(SET_PRODUCTS, []);
-    const products = await productRepository.getAll();
-    store.commit(SET_PRODUCTS, products.data);
+    const productsWithId = {};
+    store.commit(SET_PRODUCTS, productsWithId);
+
+    const products = (await productRepository.getAll()).data;
+
+    for (const index in products) {
+      const productId = products[index].id;
+      productsWithId[productId] = products[index];
+    }
+
+    store.commit(SET_PRODUCTS, productsWithId);
   }
 };

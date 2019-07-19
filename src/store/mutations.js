@@ -6,6 +6,7 @@ import {
   SET_ERROR,
   SET_ORDERS,
   SET_PRODUCTS,
+  SET_VARIATION,
   START_VARIATION_LOADING,
   STOP_VARIATION_LOADING,
   UNSET_ERROR
@@ -105,5 +106,13 @@ export default {
 
   [STOP_VARIATION_LOADING](state, variationId) {
     state.variationLoading[variationId] = false;
+  },
+
+  [SET_VARIATION](state, { parentId, variation }) {
+    if (state.products.hasOwnProperty(parentId)) {
+      state.products[parentId].variationsData.push(variation);
+    } else {
+      throw new Error('Could not find product for variation');
+    }
   }
 };

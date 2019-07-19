@@ -9,7 +9,8 @@ import {
   SET_ERROR,
   UNSET_ERROR,
   START_VARIATION_LOADING,
-  STOP_VARIATION_LOADING
+  STOP_VARIATION_LOADING,
+  SET_VARIATION
 } from '../../../src/store/mutationTypes';
 
 describe('Mutations', () => {
@@ -27,12 +28,33 @@ describe('Mutations', () => {
     slug: 'extra-bass-headphones',
     permalink: 'http://localhost:8888/shop/extra-bass-headphones/',
     type: 'variable',
-    status: 'publish'
+    status: 'publish',
+    variationsData: []
   };
+  const variation = {
+    id: 5798,
+    name: 'Extra Bass Headphones - S',
+    type: 'variation',
+    status: 'publish',
+    manage_stock: true,
+    parent_id: 4877,
+    stock_quantity: 5,
+    stock_status: 'instock',
+    attributes: [
+      {
+        id: 1,
+        name: 'Size',
+        option: 'S'
+      }
+    ]
+  };
+  const productList = {};
+
   let store;
 
   beforeEach(() => {
     store = createStore();
+    productList[product.id] = product;
   });
 
   describe('SET_ORDERS', () => {
@@ -45,9 +67,18 @@ describe('Mutations', () => {
 
   describe('SET_PRODUCTS', () => {
     it('sets proper products ', async () => {
-      store.commit(SET_PRODUCTS, product);
+      store.commit(SET_PRODUCTS, productList);
 
-      expect(store.state.products).toEqual(product);
+      expect(store.state.products).toEqual(productList);
+    });
+  });
+
+  describe('SET_VARIATION', () => {
+    it('sets variation on it\'s parent product', async () => {
+      store.commit(SET_PRODUCTS, productList);
+      store.commit(SET_VARIATION, { parentId: variation.parent_id, variation });
+
+      expect(store.state.products[product.id].variationsData[0]).toEqual(variation);
     });
   });
 

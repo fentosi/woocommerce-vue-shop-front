@@ -1,5 +1,6 @@
 export const SET_ORDERS = 'setOrders';
 export const SET_PRODUCTS = 'setProducts';
+export const SET_VARIATION = 'setVariation';
 export const ADD_ITEM_TO_CART = 'addProductToCart';
 export const REMOVE_ITEM_FROM_CART = 'removeItemFromCart';
 export const DELETE_ITEM_FROM_CART = 'deleteItemFromCart';

@@ -6,3 +6,5 @@ export const DELETE_ITEM_FROM_CART = 'deleteItemFromCart';
 export const CLEAR_CART = 'clearCart';
 export const SET_ERROR = 'setError';
 export const UNSET_ERROR = 'unsetError';
+export const START_VARIATION_LOADING = 'startVariationLoading';
+export const STOP_VARIATION_LOADING = 'stopVariationLoading';

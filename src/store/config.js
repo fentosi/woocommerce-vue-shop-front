@@ -7,7 +7,8 @@ export default {
     orders: [],
     products: [],
     cart: [],
-    error: null
+    error: null,
+    variationLoading: {}
   },
   actions,
   mutations,

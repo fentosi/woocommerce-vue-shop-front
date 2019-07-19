@@ -6,7 +6,10 @@ import {
   CLEAR_CART,
   REMOVE_ITEM_FROM_CART,
   DELETE_ITEM_FROM_CART,
-  SET_ERROR, UNSET_ERROR
+  SET_ERROR,
+  UNSET_ERROR,
+  START_VARIATION_LOADING,
+  STOP_VARIATION_LOADING
 } from '../../../src/store/mutationTypes';
 
 describe('Mutations', () => {
@@ -271,6 +274,31 @@ describe('Mutations', () => {
       });
 
       expect(store.state.cart).toEqual(expectedCart);
+    });
+  });
+
+  describe('START_VARIATION_LOADING', () => {
+    it('sets loading for a given variation ', async () => {
+      const variationId = 5578;
+
+      store.commit(START_VARIATION_LOADING, variationId);
+
+      expect(store.state.variationLoading[variationId]).toBe(true);
+    });
+  });
+
+  describe('STOP_VARIATION_LOADING', () => {
+    const variationId = 5578;
+
+    beforeEach(() => {
+      store.state.variationLoading[variationId] = true;
+    });
+    it('unsets loading for a given variation ', async () => {
+      expect(store.state.variationLoading[variationId]).toBe(true);
+
+      store.commit(STOP_VARIATION_LOADING, variationId);
+
+      expect(store.state.variationLoading[variationId]).toBe(false);
     });
   });
 });

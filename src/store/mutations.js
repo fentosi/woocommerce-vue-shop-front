@@ -6,6 +6,8 @@ import {
   SET_ERROR,
   SET_ORDERS,
   SET_PRODUCTS,
+  START_VARIATION_LOADING,
+  STOP_VARIATION_LOADING,
   UNSET_ERROR
 } from './mutationTypes';
 
@@ -95,5 +97,13 @@ export default {
 
   [CLEAR_CART](state) {
     state.cart = [];
+  },
+
+  [START_VARIATION_LOADING](state, variationId) {
+    state.variationLoading[variationId] = true;
+  },
+
+  [STOP_VARIATION_LOADING](state, variationId) {
+    state.variationLoading[variationId] = false;
   }
 };

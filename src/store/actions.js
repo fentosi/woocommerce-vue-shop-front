@@ -30,21 +30,31 @@ export default {
 
     const products = (await productRepository.getAll()).data;
 
-    for (const index in products) {
-      const productId = products[index].id;
-      productsWithId[productId] = products[index];
-    }
+    products.forEach((product) => {
+      product.variationsData = [];
+      if (Array.isArray(product.variations)) {
+        product.variations.forEach((variationId) => {
+          store.dispatch(LOAD_VARIATION, variationId);
+        });
+      }
+
+      productsWithId[product.id] = product;
+    });
 
     store.commit(SET_PRODUCTS, productsWithId);
   },
 
   async [LOAD_VARIATION](store, variationId) {
     store.commit(START_VARIATION_LOADING, variationId);
+    let variation = [];
 
-    const variation = (await productRepository.get(variationId)).data;
-
-    store.commit(SET_VARIATION, { parentId: variation.parent_id, variation });
-
-    store.commit(STOP_VARIATION_LOADING, variationId);
+    try {
+      variation = (await productRepository.get(variationId)).data;
+      store.commit(SET_VARIATION, { parentId: variation.parent_id, variation });
+      // eslint-disable-next-line no-empty
+    } catch (e) {
+    } finally {
+      store.commit(STOP_VARIATION_LOADING, variationId);
+    }
   }
 };

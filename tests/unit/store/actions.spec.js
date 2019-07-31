@@ -59,10 +59,7 @@ describe('Actions', () => {
       }
     ],
     variations: [
-      5798,
-      5799,
-      5800,
-      5801
+      5798
     ],
     variationsData: []
   };
@@ -186,6 +183,16 @@ describe('Actions', () => {
       await promise;
 
       expect(store.state.products).toEqual(expectedProducts);
+    });
+
+    xit('loads product variation', async () => {
+      const storeDispatchMock = jest.spyOn(store, 'dispatch');
+
+      await store.dispatch(LOAD_PRODUCTS);
+
+      expect(store.dispatch).toHaveBeenNthCalledWith(2, LOAD_VARIATION, variation.id);
+
+      storeDispatchMock.mockRestore();
     });
   });
 

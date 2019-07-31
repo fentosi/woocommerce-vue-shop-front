@@ -1,6 +1,12 @@
-import { GET_ORDER, LOAD_ORDER, LOAD_ORDERS, LOAD_PRODUCTS } from './actionTypes';
+import { GET_ORDER, LOAD_ORDER, LOAD_ORDERS, LOAD_PRODUCTS, LOAD_VARIATION } from './actionTypes';
 import ordersRepository from '../repositories/orders';
-import { SET_ORDERS, SET_PRODUCTS } from './mutationTypes';
+import {
+  SET_ORDERS,
+  SET_PRODUCTS,
+  SET_VARIATION,
+  START_VARIATION_LOADING,
+  STOP_VARIATION_LOADING
+} from './mutationTypes';
 import productRepository from '../repositories/products';
 
 export default {
@@ -30,5 +36,15 @@ export default {
     }
 
     store.commit(SET_PRODUCTS, productsWithId);
+  },
+
+  async [LOAD_VARIATION](store, variationId) {
+    store.commit(START_VARIATION_LOADING, variationId);
+
+    const variation = (await productRepository.get(variationId)).data;
+
+    store.commit(SET_VARIATION, { parentId: variation.parent_id, variation });
+
+    store.commit(STOP_VARIATION_LOADING, variationId);
   }
 };

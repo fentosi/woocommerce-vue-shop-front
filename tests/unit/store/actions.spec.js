@@ -1,7 +1,8 @@
 import ordersRepository from '../../../src/repositories/orders';
 import productsRepository from '../../../src/repositories/products';
-import { GET_ORDER, LOAD_ORDER, LOAD_ORDERS, LOAD_PRODUCTS } from '../../../src/store/actionTypes';
+import { GET_ORDER, LOAD_ORDER, LOAD_ORDERS, LOAD_PRODUCTS, LOAD_VARIATION } from '../../../src/store/actionTypes';
 import { createStore } from '../../../src/store';
+import { SET_PRODUCTS, STOP_VARIATION_LOADING } from '../../../src/store/mutationTypes';
 jest.mock('../../../src/repositories/orders');
 jest.mock('../../../src/repositories/products');
 
@@ -62,12 +63,32 @@ describe('Actions', () => {
       5799,
       5800,
       5801
+    ],
+    variationsData: []
+  };
+
+  const variation = {
+    id: 5798,
+    parent_id: 4877,
+    name: 'Extra Bass Headphones - S',
+    type: 'variation',
+    status: 'publish',
+    manage_stock: true,
+    stock_quantity: 5,
+    stock_status: 'instock',
+    attributes: [
+      {
+        id: 1,
+        name: 'Size',
+        option: 'S'
+      }
     ]
   };
 
   let orderRepositoryGetAllMock;
   let orderRepositoryGetMock;
   let productRepositoryGetAllMock;
+  let productRepositoryGetMock;
   let store;
 
   beforeEach(() => {
@@ -77,7 +98,9 @@ describe('Actions', () => {
     orderRepositoryGetMock = jest.spyOn(ordersRepository, 'get').mockImplementation(() => {
       return { data: orderNotInTheStore };
     });
-
+    productRepositoryGetMock = jest.spyOn(productsRepository, 'get').mockImplementation(() => {
+      return { data: variation };
+    });
     productRepositoryGetAllMock = jest.spyOn(productsRepository, 'getAll').mockImplementation(() => {
       return { data: [product] };
     });
@@ -87,6 +110,8 @@ describe('Actions', () => {
   afterEach(() => {
     orderRepositoryGetAllMock.mockRestore();
     orderRepositoryGetMock.mockRestore();
+    productRepositoryGetMock.mockRestore();
+    productRepositoryGetAllMock.mockRestore();
   });
 
   describe('LOAD_ORDERS', () => {
@@ -161,6 +186,41 @@ describe('Actions', () => {
       await promise;
 
       expect(store.state.products).toEqual(expectedProducts);
+    });
+  });
+
+  describe('LOAD_VARIATION', () => {
+    const variationId = 5578;
+    const productsWithId = {};
+    productsWithId[product.id] = product;
+
+    beforeEach(() => {
+      store.commit(STOP_VARIATION_LOADING, variationId);
+      store.commit(SET_PRODUCTS, productsWithId);
+    });
+
+    it('sets loading for given variation ', async () => {
+      expect(store.state.variationLoading[variationId]).toBe(false);
+
+      store.dispatch(LOAD_VARIATION, variationId);
+
+      expect(store.state.variationLoading[variationId]).toBe(true);
+    });
+
+    it('unsets loading for variation after finished', async () => {
+      const promise = store.dispatch(LOAD_VARIATION, variationId);
+
+      expect(store.state.variationLoading[variationId]).toBe(true);
+
+      await promise;
+
+      expect(store.state.variationLoading[variationId]).toBe(false);
+    });
+
+    it('sets variation data on product', async () => {
+      await store.dispatch(LOAD_VARIATION, variationId);
+
+      expect(store.state.products[product.id].variationsData[0]).toBe(variation);
     });
   });
 });

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import productRepository from '../../../src/repositories/products'
+import productRepository from '../../../src/repositories/products';
 
 describe('Products Repository', () => {
   const woocommerceUrl = 'http://localhost';
@@ -44,7 +44,8 @@ describe('Products Repository', () => {
       5799,
       5800,
       5801
-    ]
+    ],
+    variationsData: []
   };
 
   it('"getAll" makes a call to productRepository endpoint', () => {

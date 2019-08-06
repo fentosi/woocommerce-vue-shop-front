@@ -185,14 +185,14 @@ describe('Actions', () => {
       expect(store.state.products).toEqual(expectedProducts);
     });
 
-    xit('loads product variation', async () => {
-      const storeDispatchMock = jest.spyOn(store, 'dispatch');
+    it('sets variations on products', async () => {
+      const promise = store.dispatch(LOAD_PRODUCTS);
 
-      await store.dispatch(LOAD_PRODUCTS);
+      expect(store.state.products).toEqual({});
 
-      expect(store.dispatch).toHaveBeenNthCalledWith(2, LOAD_VARIATIONS, variation.id);
+      await promise;
 
-      storeDispatchMock.mockRestore();
+      expect(store.state.products[product.id].variationsData).toEqual([variation]);
     });
   });
 
@@ -205,7 +205,7 @@ describe('Actions', () => {
       await store.commit(SET_PRODUCTS, productsWithId);
     });
 
-    it('sets loading for given variation ', async () => {
+    it('sets loading for given variation', async () => {
       expect(store.state.variationLoading[product.id]).toBe(false);
 
       store.dispatch(LOAD_VARIATIONS, product);

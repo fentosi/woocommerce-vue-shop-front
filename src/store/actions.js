@@ -33,6 +33,7 @@ export default {
     products.forEach((product) => {
       product.variationsData = [];
       productsWithId[product.id] = product;
+      store.dispatch(LOAD_VARIATIONS, product);
     });
 
     store.commit(SET_PRODUCTS, productsWithId);

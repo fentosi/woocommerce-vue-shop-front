@@ -15,6 +15,7 @@ describe('OrderNewItem.vue', () => {
     images: [
       { src: 'asd' }
     ],
+    variations: [],
     stock_quantity: null
   };
 

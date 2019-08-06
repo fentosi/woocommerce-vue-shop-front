@@ -1,5 +1,6 @@
 <template>
   <div class="card float-left" style="width: 18rem;">
+    <span v-if="isVariationLoading">Variations loading</span>
     <img :src="images[0].src" class="card-img-top" v-if="images" v-on:click="addToCart">
     <div class="card-body">
       <h5 class="card-title">{{name}}</h5>
@@ -38,7 +39,13 @@ export default {
     short_description: String,
     price_html: String,
     images: Array,
-    stock_quantity: Number
+    stock_quantity: Number,
+    variations: Array
+  },
+  computed: {
+    isVariationLoading() {
+      return this.$store.state.variationLoading[this.id] === true;
+    }
   },
   methods: {
     addToCart() {

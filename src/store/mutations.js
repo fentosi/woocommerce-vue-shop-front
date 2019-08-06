@@ -101,11 +101,11 @@ export default {
   },
 
   [START_VARIATIONS_LOADING](state, productId) {
-    state.variationLoading[productId] = true;
+    state.variationLoading = { ...state.variationLoading, [productId]: true };
   },
 
   [STOP_VARIATIONS_LOADING](state, productId) {
-    state.variationLoading[productId] = false;
+    state.variationLoading = { ...state.variationLoading, [productId]: false };
   },
 
   [SET_VARIATION](state, variation) {

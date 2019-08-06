@@ -112,6 +112,7 @@ export default {
     const parentId = variation.parent_id;
     if (state.products.hasOwnProperty(parentId)) {
       state.products[parentId].variationsData.push(variation);
+      state.products = { ...state.products };
     } else {
       throw new Error('Could not find product for variation');
     }

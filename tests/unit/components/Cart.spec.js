@@ -18,11 +18,11 @@ describe('Cart.vue', () => {
   beforeEach(() => {
     store = createStore();
     storeCommitSpy = jest.spyOn(store, 'commit');
-    store.state.products = [
-      { id: 1, name: 'product 1', price: '19.99' },
-      { id: 2, name: 'product 2', price: '9.99' },
-      { id: 3, name: 'product 3', price: '10' }
-    ];
+    store.state.products = {
+      1: { id: 1, name: 'product 1', price: '19.99' },
+      2: { id: 2, name: 'product 2', price: '9.99' },
+      3: { id: 3, name: 'product 3', price: '10' }
+    };
 
     component = shallowMount(Cart, {
       mocks: {

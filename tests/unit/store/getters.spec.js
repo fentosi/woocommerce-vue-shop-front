@@ -24,7 +24,7 @@ describe('Getters', () => {
   beforeEach(() => {
     store = createStore();
     store.state.orders = [order];
-    store.state.products = [product];
+    store.state.products = { [product.id]: product };
   });
 
   describe('order', () => {

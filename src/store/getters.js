@@ -11,10 +11,6 @@ export default {
     }
   },
   product: (state) => (productId) => {
-    let item = state.products.filter((product) => {
-      return product.id === productId;
-    });
-
-    return item.pop();
+    return state.products[productId];
   }
 };

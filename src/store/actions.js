@@ -1,11 +1,11 @@
-import { GET_ORDER, LOAD_ORDER, LOAD_ORDERS, LOAD_PRODUCTS, LOAD_VARIATION } from './actionTypes';
+import { GET_ORDER, LOAD_ORDER, LOAD_ORDERS, LOAD_PRODUCTS, LOAD_VARIATIONS } from './actionTypes';
 import ordersRepository from '../repositories/orders';
 import {
   SET_ORDERS,
   SET_PRODUCTS,
   SET_VARIATION,
-  START_VARIATION_LOADING,
-  STOP_VARIATION_LOADING
+  START_VARIATIONS_LOADING,
+  STOP_VARIATIONS_LOADING
 } from './mutationTypes';
 import productRepository from '../repositories/products';
 
@@ -32,29 +32,28 @@ export default {
 
     products.forEach((product) => {
       product.variationsData = [];
-      if (Array.isArray(product.variations)) {
-        product.variations.forEach((variationId) => {
-          store.dispatch(LOAD_VARIATION, variationId);
-        });
-      }
-
       productsWithId[product.id] = product;
     });
 
     store.commit(SET_PRODUCTS, productsWithId);
   },
 
-  async [LOAD_VARIATION](store, variationId) {
-    store.commit(START_VARIATION_LOADING, variationId);
-    let variation = [];
+  async [LOAD_VARIATIONS](store, product) {
+    store.commit(START_VARIATIONS_LOADING, product.id);
+    let promises = [];
 
-    try {
-      variation = (await productRepository.get(variationId)).data;
-      store.commit(SET_VARIATION, { parentId: variation.parent_id, variation });
-      // eslint-disable-next-line no-empty
-    } catch (e) {
-    } finally {
-      store.commit(STOP_VARIATION_LOADING, variationId);
-    }
+    product.variations.forEach((variationId) => {
+      promises.push(productRepository.get(variationId));
+    });
+
+    return Promise.all(promises).then((variations) => {
+      if (Array.isArray(variations)) {
+        variations.forEach((variation) => {
+          store.commit(SET_VARIATION, variation.data);
+        });
+      }
+    }).finally(() => {
+      store.commit(STOP_VARIATIONS_LOADING, product.id);
+    });
   }
 };

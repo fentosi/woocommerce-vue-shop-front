@@ -1,8 +1,8 @@
 import ordersRepository from '../../../src/repositories/orders';
 import productsRepository from '../../../src/repositories/products';
-import { GET_ORDER, LOAD_ORDER, LOAD_ORDERS, LOAD_PRODUCTS, LOAD_VARIATION } from '../../../src/store/actionTypes';
+import { GET_ORDER, LOAD_ORDER, LOAD_ORDERS, LOAD_PRODUCTS, LOAD_VARIATIONS } from '../../../src/store/actionTypes';
 import { createStore } from '../../../src/store';
-import { SET_PRODUCTS, STOP_VARIATION_LOADING } from '../../../src/store/mutationTypes';
+import { SET_PRODUCTS, STOP_VARIATIONS_LOADING } from '../../../src/store/mutationTypes';
 jest.mock('../../../src/repositories/orders');
 jest.mock('../../../src/repositories/products');
 
@@ -190,42 +190,41 @@ describe('Actions', () => {
 
       await store.dispatch(LOAD_PRODUCTS);
 
-      expect(store.dispatch).toHaveBeenNthCalledWith(2, LOAD_VARIATION, variation.id);
+      expect(store.dispatch).toHaveBeenNthCalledWith(2, LOAD_VARIATIONS, variation.id);
 
       storeDispatchMock.mockRestore();
     });
   });
 
-  describe('LOAD_VARIATION', () => {
-    const variationId = 5578;
+  describe('LOAD_VARIATIONS', () => {
     const productsWithId = {};
     productsWithId[product.id] = product;
 
-    beforeEach(() => {
-      store.commit(STOP_VARIATION_LOADING, variationId);
-      store.commit(SET_PRODUCTS, productsWithId);
+    beforeEach(async () => {
+      await store.commit(STOP_VARIATIONS_LOADING, product.id);
+      await store.commit(SET_PRODUCTS, productsWithId);
     });
 
     it('sets loading for given variation ', async () => {
-      expect(store.state.variationLoading[variationId]).toBe(false);
+      expect(store.state.variationLoading[product.id]).toBe(false);
 
-      store.dispatch(LOAD_VARIATION, variationId);
+      store.dispatch(LOAD_VARIATIONS, product);
 
-      expect(store.state.variationLoading[variationId]).toBe(true);
+      expect(store.state.variationLoading[product.id]).toBe(true);
     });
 
     it('unsets loading for variation after finished', async () => {
-      const promise = store.dispatch(LOAD_VARIATION, variationId);
+      const promise = store.dispatch(LOAD_VARIATIONS, product);
 
-      expect(store.state.variationLoading[variationId]).toBe(true);
+      expect(store.state.variationLoading[product.id]).toBe(true);
 
       await promise;
 
-      expect(store.state.variationLoading[variationId]).toBe(false);
+      expect(store.state.variationLoading[product.id]).toBe(false);
     });
 
     it('sets variation data on product', async () => {
-      await store.dispatch(LOAD_VARIATION, variationId);
+      await store.dispatch(LOAD_VARIATIONS, product);
 
       expect(store.state.products[product.id].variationsData[0]).toBe(variation);
     });

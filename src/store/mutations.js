@@ -7,8 +7,8 @@ import {
   SET_ORDERS,
   SET_PRODUCTS,
   SET_VARIATION,
-  START_VARIATION_LOADING,
-  STOP_VARIATION_LOADING,
+  START_VARIATIONS_LOADING,
+  STOP_VARIATIONS_LOADING,
   UNSET_ERROR
 } from './mutationTypes';
 
@@ -100,15 +100,16 @@ export default {
     state.cart = [];
   },
 
-  [START_VARIATION_LOADING](state, variationId) {
-    state.variationLoading[variationId] = true;
+  [START_VARIATIONS_LOADING](state, productId) {
+    state.variationLoading[productId] = true;
   },
 
-  [STOP_VARIATION_LOADING](state, variationId) {
-    state.variationLoading[variationId] = false;
+  [STOP_VARIATIONS_LOADING](state, productId) {
+    state.variationLoading[productId] = false;
   },
 
-  [SET_VARIATION](state, { parentId, variation }) {
+  [SET_VARIATION](state, variation) {
+    const parentId = variation.parent_id;
     if (state.products.hasOwnProperty(parentId)) {
       state.products[parentId].variationsData.push(variation);
     } else {

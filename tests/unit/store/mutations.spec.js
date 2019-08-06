@@ -8,8 +8,8 @@ import {
   DELETE_ITEM_FROM_CART,
   SET_ERROR,
   UNSET_ERROR,
-  START_VARIATION_LOADING,
-  STOP_VARIATION_LOADING,
+  START_VARIATIONS_LOADING,
+  STOP_VARIATIONS_LOADING,
   SET_VARIATION
 } from '../../../src/store/mutationTypes';
 
@@ -76,7 +76,7 @@ describe('Mutations', () => {
   describe('SET_VARIATION', () => {
     it('sets variation on it\'s parent product', async () => {
       store.commit(SET_PRODUCTS, productList);
-      store.commit(SET_VARIATION, { parentId: variation.parent_id, variation });
+      store.commit(SET_VARIATION, variation);
 
       expect(store.state.products[product.id].variationsData[0]).toEqual(variation);
     });
@@ -308,28 +308,28 @@ describe('Mutations', () => {
     });
   });
 
-  describe('START_VARIATION_LOADING', () => {
+  describe('START_VARIATIONS_LOADING', () => {
     it('sets loading for a given variation ', async () => {
-      const variationId = 5578;
+      const productId = 5578;
 
-      store.commit(START_VARIATION_LOADING, variationId);
+      store.commit(START_VARIATIONS_LOADING, productId);
 
-      expect(store.state.variationLoading[variationId]).toBe(true);
+      expect(store.state.variationLoading[productId]).toBe(true);
     });
   });
 
-  describe('STOP_VARIATION_LOADING', () => {
-    const variationId = 5578;
+  describe('STOP_VARIATIONS_LOADING', () => {
+    const productId = 5578;
 
     beforeEach(() => {
-      store.state.variationLoading[variationId] = true;
+      store.state.variationLoading[productId] = true;
     });
     it('unsets loading for a given variation ', async () => {
-      expect(store.state.variationLoading[variationId]).toBe(true);
+      expect(store.state.variationLoading[productId]).toBe(true);
 
-      store.commit(STOP_VARIATION_LOADING, variationId);
+      store.commit(STOP_VARIATIONS_LOADING, productId);
 
-      expect(store.state.variationLoading[variationId]).toBe(false);
+      expect(store.state.variationLoading[productId]).toBe(false);
     });
   });
 });

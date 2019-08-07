@@ -10,12 +10,12 @@
 import Vue from 'vue';
 import Navbar from './components/Navbar';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faMinusSquare, faPlusSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faMinusSquare, faPlusSquare, faTrash, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import Alert from './components/Alert';
 import { mapState } from 'vuex';
 
-library.add(faMinusSquare, faPlusSquare, faTrash);
+library.add(faMinusSquare, faPlusSquare, faTrash, faShoppingCart);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 

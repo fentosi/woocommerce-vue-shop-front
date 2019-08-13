@@ -10,13 +10,23 @@ describe('Getters', () => {
     total_tax: '0'
   };
 
+  const variation = {
+    id: 22,
+    attributes:
+      [
+        { id: 1, name: 'Size', option: 'S' }
+      ],
+    stock_quantity: 3
+  };
+
   const product = {
     id: 4877,
     name: 'Extra Bass Headphones',
     slug: 'extra-bass-headphones',
     permalink: 'http://localhost:8888/shop/extra-bass-headphones/',
     type: 'variable',
-    status: 'publish'
+    status: 'publish',
+    variationsData: [variation]
   };
 
   let store;
@@ -52,6 +62,26 @@ describe('Getters', () => {
       const productInStore = store.getters.product(47);
 
       expect(productInStore).toEqual(undefined);
+    });
+  });
+
+  describe('variation', () => {
+    it('returns variation from store, if exists', () => {
+      const variationInStore = store.getters.variation(4877, 22);
+
+      expect(variationInStore).toEqual(variation);
+    });
+
+    it('returns undefined product does not exist in store', () => {
+      const variationInStore = store.getters.variation(47);
+
+      expect(variationInStore).toEqual(undefined);
+    });
+
+    it('returns undefined product  exists but variation does not exist in store', () => {
+      const variationInStore = store.getters.variation(4877, 11);
+
+      expect(variationInStore).toEqual(undefined);
     });
   });
 });

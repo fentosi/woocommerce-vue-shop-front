@@ -8,7 +8,14 @@
             <font-awesome-icon icon="trash" size="lg" v-on:click="deleteItemFromCart(cartItem)" />
           </div>
           <div class="col-sm-2">{{cartItem.quantity}} x</div>
-          <div class="col-sm-5">{{cartItem.name}}</div>
+          <div class="col-sm-5">
+            <div v-if="cartItem.variationData">
+              {{cartItem.variationData.name}}
+            </div>
+            <div v-else>
+              {{cartItem.name}}
+            </div>
+          </div>
           <div class="col-sm-2 text-right">{{cartItem.price}}</div>
           <div class="col-sm-2">
             <font-awesome-icon icon="plus-square" size="2x" v-on:click="addItemToCart(cartItem)" />
@@ -61,13 +68,15 @@ export default {
       let itemsInCart = [];
       this.cart.forEach((item) => {
         const product = this.$store.getters.product(item.productId);
+        const variationData = item.variationId ? this.$store.getters.variation(item.productId, item.variationId) : null;
 
         itemsInCart.push({
-          id: product.id,
+          id: product.id + (item.variationId ? '-' + item.variationId : ''),
           variationId: item.variationId,
           name: product.name,
           price: item.quantity * Number(product.price),
-          quantity: item.quantity
+          quantity: item.quantity,
+          variationData
         });
       });
 

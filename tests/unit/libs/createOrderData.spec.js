@@ -34,6 +34,8 @@ describe('createOrderData', () => {
 
     const expectedData = {
       set_paid: true,
+      payment_method: 'cod',
+      payment_method_title: 'Cash on delivery',
       line_items: [{
         'productId': 1112,
         'variationId': 123,

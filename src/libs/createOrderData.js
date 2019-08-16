@@ -10,6 +10,8 @@ export const createOrderData = (cart) => {
   });
 
   return {
+    payment_method: 'cod',
+    payment_method_title: 'Cash on delivery',
     set_paid: true,
     line_items: cart
   };

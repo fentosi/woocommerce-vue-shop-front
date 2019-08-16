@@ -19,11 +19,11 @@ describe('createOrderData', () => {
     }).toThrow(Error);
   });
 
-  it('returns data with items from the cart', () => {
+  it('returns data with items from the cart without the variationId if null', () => {
     const cart = [
       {
         'productId': 1112,
-        'variationId': null,
+        'variationId': 123,
         'quantity': 2
       },
       {
@@ -34,7 +34,15 @@ describe('createOrderData', () => {
 
     const expectedData = {
       set_paid: true,
-      line_items: cart
+      line_items: [{
+        'productId': 1112,
+        'variationId': 123,
+        'quantity': 2
+      },
+      {
+        'productId': 4872,
+        'quantity': 1
+      }]
     };
 
     expect(createOrderData(cart)).toEqual(expectedData);

@@ -3,6 +3,12 @@ export const createOrderData = (cart) => {
     throw new Error('Cart is empty');
   }
 
+  cart.forEach(cartItem => {
+    if (!cartItem.variationId) {
+      delete cartItem.variationId;
+    }
+  });
+
   return {
     set_paid: true,
     line_items: cart

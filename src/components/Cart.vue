@@ -129,6 +129,7 @@ export default {
 
         itemsInCart.push({
           id: product.id + (item.variationId ? '-' + item.variationId : ''),
+          productId: product.id,
           variationId: item.variationId,
           name: product.name,
           price: item.quantity * Number(product.price),
@@ -151,14 +152,14 @@ export default {
   methods: {
     addItemToCart(item) {
       this.$store.commit(ADD_ITEM_TO_CART, {
-        productId: item.id,
+        productId: item.productId,
         variationId: item.variationId,
         quantity: 1
       });
     },
     removeItemFromCart(item) {
       this.$store.commit(REMOVE_ITEM_FROM_CART, {
-        productId: item.id,
+        productId: item.productId,
         variationId: item.variationId
       });
     },

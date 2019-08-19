@@ -43,8 +43,8 @@ describe('Cart.vue', () => {
       ];
 
       const expectedItems = [
-        { id: '1', name: 'product 1', price: 19.99, quantity: 1, variationId: null, variationData: null },
-        { id: '3', name: 'product 3', price: 20.00, quantity: 2, variationId: null, variationData: null }
+        { id: '1', productId: 1, name: 'product 1', price: 19.99, quantity: 1, variationId: null, variationData: null },
+        { id: '3', productId: 3, name: 'product 3', price: 20.00, quantity: 2, variationId: null, variationData: null }
       ];
 
       expect(component.vm.cartItems).toEqual(expectedItems);
@@ -90,7 +90,7 @@ describe('Cart.vue', () => {
         };
 
         component.vm.addItemToCart({
-          id: expectedParam.productId,
+          productId: expectedParam.productId,
           variationId: expectedParam.variationId
         });
 
@@ -106,7 +106,7 @@ describe('Cart.vue', () => {
         };
 
         component.vm.removeItemFromCart({
-          id: expectedParam.productId,
+          productId: expectedParam.productId,
           variationId: expectedParam.variationId
         });
 

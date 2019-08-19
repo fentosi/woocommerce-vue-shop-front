@@ -2,36 +2,40 @@
   <div>
     <h3>Cart</h3>
     <div v-if="cartItems.length">
-      <template v-for="cartItem in cartItems">
-        <div class="row" v-bind:key="cartItem.id">
-          <div class="col-sm-1">
-            <font-awesome-icon icon="trash" size="lg" v-on:click="deleteItemFromCart(cartItem)" />
-          </div>
-          <div class="col-sm-2">{{cartItem.quantity}} x</div>
-          <div class="col-sm-5">
-            <div v-if="cartItem.variationData">
-              {{cartItem.variationData.name}}
+      <div class="cart-row">
+        <template v-for="cartItem in cartItems">
+          <div class="cart-item" v-bind:key="cartItem.id">
+            <div class="delete">
+              <font-awesome-icon icon="trash" size="lg" v-on:click="deleteItemFromCart(cartItem)" />
             </div>
-            <div v-else>
-              {{cartItem.name}}
+            <div class="quantity text-center">{{cartItem.quantity}}x</div>
+            <div class="name">
+              <div v-if="cartItem.variationData">
+                {{cartItem.variationData.name}}
+              </div>
+              <div v-else>
+                {{cartItem.name}}
+              </div>
+            </div>
+            <div class="price text-right">{{cartItem.price}}</div>
+            <div class="icons ">
+              <font-awesome-icon icon="plus-square" size="2x" v-on:click="addItemToCart(cartItem)" />
+              &nbsp;
+              &nbsp;
+              <font-awesome-icon icon="minus-square" size="2x" v-on:click="removeItemFromCart(cartItem)" />
             </div>
           </div>
-          <div class="col-sm-2 text-right">{{cartItem.price}}</div>
-          <div class="col-sm-2">
-            <font-awesome-icon icon="plus-square" size="2x" v-on:click="addItemToCart(cartItem)" />
-            &nbsp;
-            &nbsp;
-            <font-awesome-icon icon="minus-square" size="2x" v-on:click="removeItemFromCart(cartItem)" />
-          </div>
-        </div>
-      </template>
+        </template>
+      </div>
       <br />
-      <h4 class="text-right">Total: <small>{{totalPrice}}</small></h4>
-      <div class="row">
-        <div class="col-sm-6">
+      <div class="cart-row">
+        <h4 class="text-right">Total: <small>{{totalPrice}}</small></h4>
+      </div>
+      <div class="cart-row cart-buttons">
+        <div>
           <button class="btn btn-secondary" v-on:click="clearCart">Clear</button>
         </div>
-        <div class="col-sm-6 text-right">
+        <div>
           <button class="btn btn-primary submit" v-on:click="submitCart" :disabled="isSubmitting">Submit</button>
         </div>
       </div>
@@ -41,6 +45,53 @@
     </div>
   </div>
 </template>
+
+<style scoped>
+  .cart-row {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .cart-item > div {
+    float: left;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .cart-item > div:nth-of-type(1) {
+    padding-left: 0;
+  }
+
+  .cart-item .delete {
+    width: 25px;
+  }
+
+  .cart-item .quantity {
+    width: 50px;
+  }
+
+  .cart-item .name {
+    width: 40px;
+  }
+
+  .cart-item .price {
+    width: 80px;
+  }
+
+  .cart-item .icons {
+    width: 100px;
+  }
+
+  .cart-buttons {
+    justify-content: space-between;
+  }
+
+  @media only screen and (max-width: 768px) {
+    .cart-item .name {
+      width: 100px;
+    }
+  }
+</style>
 
 <script>
 

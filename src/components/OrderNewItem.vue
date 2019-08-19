@@ -53,6 +53,12 @@
   .list-group-item {
     border: none;
   }
+
+  @media only screen and (max-width: 1024px) {
+    .card {
+      width: 13rem !important;
+    }
+  }
 </style>
 
 <script>

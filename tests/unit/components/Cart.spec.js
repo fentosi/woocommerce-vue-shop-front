@@ -21,7 +21,13 @@ describe('Cart.vue', () => {
     store.state.products = {
       1: { id: 1, name: 'product 1', price: '19.99', variationsData: [] },
       2: { id: 2, name: 'product 2', price: '9.99', variationsData: [] },
-      3: { id: 3, name: 'product 3', price: '10', variationsData: [] }
+      3: { id: 3, name: 'product 3', price: '10', variationsData: [] },
+      4: { id: 4,
+        name: 'product 4',
+        price: '10',
+        variationsData: [{
+          variationId: 5
+        }] }
     };
 
     component = shallowMount(Cart, {
@@ -165,6 +171,11 @@ describe('Cart.vue', () => {
           'productId': 2,
           'variationId': null,
           'quantity': 1
+        },
+        {
+          'productId': 4,
+          'variationId': 5,
+          'quantity': 1
         }];
 
       beforeEach(() => {
@@ -181,7 +192,23 @@ describe('Cart.vue', () => {
       it('calls repository to create an order', () => {
         const expectedData = {
           set_paid: true,
-          line_items: cart
+          line_items: [
+            {
+              product_id: cart[0].productId,
+              quantity: cart[0].quantity
+            },
+            {
+              product_id: cart[1].productId,
+              quantity: cart[1].quantity
+            },
+            {
+              product_id: cart[2].productId,
+              variation_id: cart[2].variationId,
+              quantity: cart[2].quantity
+            }
+          ],
+          payment_method: 'cod',
+          payment_method_title: 'Cash on delivery'
         };
 
         spy = jest.spyOn(ordersRepository, 'create');

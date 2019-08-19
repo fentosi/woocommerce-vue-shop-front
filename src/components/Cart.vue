@@ -71,7 +71,7 @@
   }
 
   .cart-item .name {
-    width: 40px;
+    width: 160px;
   }
 
   .cart-item .price {
@@ -89,6 +89,12 @@
   @media only screen and (max-width: 768px) {
     .cart-item .name {
       width: 100px;
+    }
+  }
+
+  @media only screen and (max-width: 1024px) {
+    .cart-item .name {
+      width: 120px;
     }
   }
 </style>

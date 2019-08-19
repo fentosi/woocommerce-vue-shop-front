@@ -3,16 +3,23 @@ export const createOrderData = (cart) => {
     throw new Error('Cart is empty');
   }
 
-  cart.forEach(cartItem => {
-    if (!cartItem.variationId) {
-      delete cartItem.variationId;
+  const lineItems = cart.map(cartItem => {
+    const lineItem = {
+      product_id: cartItem.productId,
+      quantity: cartItem.quantity
+    };
+
+    if (cartItem.variationId) {
+      lineItem.variation_id = cartItem.variationId;
     }
+
+    return lineItem;
   });
 
   return {
     payment_method: 'cod',
     payment_method_title: 'Cash on delivery',
     set_paid: true,
-    line_items: cart
+    line_items: lineItems
   };
 };

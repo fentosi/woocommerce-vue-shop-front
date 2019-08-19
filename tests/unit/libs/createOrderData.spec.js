@@ -37,12 +37,12 @@ describe('createOrderData', () => {
       payment_method: 'cod',
       payment_method_title: 'Cash on delivery',
       line_items: [{
-        'productId': 1112,
-        'variationId': 123,
+        'product_id': 1112,
+        'variation_id': 123,
         'quantity': 2
       },
       {
-        'productId': 4872,
+        'product_id': 4872,
         'quantity': 1
       }]
     };

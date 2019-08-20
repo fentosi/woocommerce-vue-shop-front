@@ -1,7 +1,7 @@
 <template>
   <div class="card float-left" style="width: 18rem;">
     <div v-if="images.length > 0">
-      <img :src="images[0].src" class="card-img-top" v-if="images" v-on:click="addToCart">
+      <img :src="images[0].src" class="card-img-top" v-if="images">
     </div>
     <div class="card-body">
       <h5 class="card-title">{{name}}</h5>
@@ -29,11 +29,14 @@
             </ul>
           </div>
           <button class="btn btn-primary" slot="reference">
-            Add to cart
+            <font-awesome-icon icon="shopping-cart" />
           </button>
         </popper>
       </template>
-      <button class="btn btn-primary" v-on:click="addToCart" v-else>Add to cart</button>
+      <button class="btn btn-primary" v-on:click="addToCart" v-else>
+        <font-awesome-icon icon="shopping-cart" />
+        ({{stock_quantity}})
+      </button>
     </div>
   </div>
 </template>

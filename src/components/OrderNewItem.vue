@@ -1,12 +1,12 @@
 <template>
   <div class="card float-left" style="width: 18rem;">
-    <div v-if="images.length > 0">
-      <img :src="images[0].src" class="card-img-top" v-if="images">
+    <div class="image">
+      <img :src="images[0].src" class="card-img-top" v-if="images.length > 0">
     </div>
     <div class="card-body">
       <h5 class="card-title">{{name}}</h5>
-      <p class="card-text" v-html="short_description"></p>
-      <p class="card-text" v-html="price_html"></p>
+      <p class="card-text" v-html="short_description" v-if="short_description"></p>
+      <p class="card-text price" v-html="price_html" v-if="price_html"></p>
       <template v-if="variations.length">
         <popper
                 trigger="click"
@@ -45,6 +45,10 @@
   .card {
     margin: 1em 1em 0 0;
   }
+
+  .card .image {
+    height: 18rem;
+  }
   .card-title {
     height: 1.3em;
     overflow: hidden;
@@ -55,6 +59,10 @@
     overflow: hidden;
   }
 
+  .card-text.price {
+    height: auto;
+  }
+
   .list-group-item {
     border: none;
   }
@@ -62,6 +70,10 @@
   @media only screen and (max-width: 1024px) {
     .card {
       width: 13rem !important;
+    }
+
+    .card .image {
+      height: 13rem !important;
     }
   }
 </style>

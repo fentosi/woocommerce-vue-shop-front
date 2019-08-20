@@ -1,6 +1,8 @@
 <template>
   <div class="card float-left" style="width: 18rem;">
-    <img :src="images[0].src" class="card-img-top" v-if="images" v-on:click="addToCart">
+    <div v-if="images.length > 0">
+      <img :src="images[0].src" class="card-img-top" v-if="images" v-on:click="addToCart">
+    </div>
     <div class="card-body">
       <h5 class="card-title">{{name}}</h5>
       <p class="card-text" v-html="short_description"></p>

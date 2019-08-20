@@ -16,11 +16,14 @@ export default {
   get(productID) {
     return axios.get(this.getUrl(productID));
   },
-  getUrl(id, parameters) {
+  getVariations(productID) {
+    return axios.get(this.getUrl(`${productID}/variations`));
+  },
+  getUrl(urlPart, parameters) {
     let url = this.baseUrl + '/' + this.basePath;
 
-    if (id) {
-      url += '/' + id;
+    if (urlPart) {
+      url += '/' + urlPart;
     }
 
     if (parameters) {

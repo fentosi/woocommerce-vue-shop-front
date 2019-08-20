@@ -61,17 +61,28 @@ describe('Products Repository', () => {
 
   it('"get" makes a call to productRepository endpoint with proper url', () => {
     const id = 123;
-    const spy = jest.spyOn(axios, 'get').mockImplementation(() => product);
+    const spy = jest.spyOn(axios, 'get');
+    const url = woocommerceUrl + '/' + basePath + '/' + id;
 
-    let ordersData = productRepository.get(id);
-    expect(spy).toHaveBeenCalled();
-    expect(ordersData).toEqual(product);
+    productRepository.get(id);
+    expect(spy).toHaveBeenCalledWith(url);
+
+    spy.mockRestore();
+  });
+
+  it('"getVariation" makes a call to productRepository endpoint with proper url', () => {
+    const id = 123;
+    const spy = jest.spyOn(axios, 'get');
+    const url = woocommerceUrl + '/' + basePath + '/' + id + '/variations';
+
+    productRepository.getVariations(id);
+    expect(spy).toHaveBeenCalledWith(url);
 
     spy.mockRestore();
   });
 
   describe('getUrl', () => {
-    describe('id is not present', () => {
+    describe('urlPart is not present', () => {
       it('no parameters returns url', () => {
         let expectedUrl = woocommerceUrl + '/' + basePath;
         expect(productRepository.getUrl()).toBe(expectedUrl);
@@ -88,11 +99,11 @@ describe('Products Repository', () => {
       });
     });
 
-    describe('id is present', () => {
+    describe('urlPart is present', () => {
       it('no parameters returns url with id', () => {
-        const id = 123;
-        const expectedUrl = woocommerceUrl + '/' + basePath + '/' + id;
-        expect(productRepository.getUrl(id)).toBe(expectedUrl);
+        const urlPart = '123/432';
+        const expectedUrl = woocommerceUrl + '/' + basePath + '/' + urlPart;
+        expect(productRepository.getUrl(urlPart)).toBe(expectedUrl);
       });
     });
   });

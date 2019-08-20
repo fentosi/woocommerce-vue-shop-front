@@ -76,7 +76,7 @@ describe('Mutations', () => {
   describe('SET_VARIATION', () => {
     it('sets variation on it\'s parent product', async () => {
       store.commit(SET_PRODUCTS, productList);
-      store.commit(SET_VARIATION, variation);
+      store.commit(SET_VARIATION, { productID: product.id, variation });
 
       expect(store.state.products[product.id].variationsData[0]).toEqual(variation);
     });

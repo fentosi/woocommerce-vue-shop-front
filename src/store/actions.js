@@ -33,28 +33,24 @@ export default {
     products.forEach((product) => {
       product.variationsData = [];
       productsWithId[product.id] = product;
-      store.dispatch(LOAD_VARIATIONS, product);
     });
 
-    store.commit(SET_PRODUCTS, productsWithId);
+    await store.commit(SET_PRODUCTS, productsWithId);
+
+    products.forEach((product) => {
+      store.dispatch(LOAD_VARIATIONS, product);
+    });
   },
 
   async [LOAD_VARIATIONS](store, product) {
     store.commit(START_VARIATIONS_LOADING, product.id);
-    let promises = [];
 
-    product.variations.forEach((variationId) => {
-      promises.push(productRepository.get(variationId));
+    const variations = (await productRepository.getVariations(product.id)).data;
+
+    variations.forEach(async (variation) => {
+      await store.commit(SET_VARIATION, { productID: product.id, variation });
     });
 
-    return Promise.all(promises).then((variations) => {
-      if (Array.isArray(variations)) {
-        variations.forEach((variation) => {
-          store.commit(SET_VARIATION, variation.data);
-        });
-      }
-    }).finally(() => {
-      store.commit(STOP_VARIATIONS_LOADING, product.id);
-    });
+    store.commit(STOP_VARIATIONS_LOADING, product.id);
   }
 };

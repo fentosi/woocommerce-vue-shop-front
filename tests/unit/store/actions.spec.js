@@ -85,6 +85,7 @@ describe('Actions', () => {
   let orderRepositoryGetAllMock;
   let orderRepositoryGetMock;
   let productRepositoryGetAllMock;
+  let productRepositoryGetVariationsMock;
   let productRepositoryGetMock;
   let store;
 
@@ -101,6 +102,9 @@ describe('Actions', () => {
     productRepositoryGetAllMock = jest.spyOn(productsRepository, 'getAll').mockImplementation(() => {
       return { data: [product] };
     });
+    productRepositoryGetVariationsMock = jest.spyOn(productsRepository, 'getVariations').mockImplementation(() => {
+      return { data: [variation] };
+    });
     store = createStore();
   });
 
@@ -109,6 +113,7 @@ describe('Actions', () => {
     orderRepositoryGetMock.mockRestore();
     productRepositoryGetMock.mockRestore();
     productRepositoryGetAllMock.mockRestore();
+    productRepositoryGetVariationsMock.mockRestore();
   });
 
   describe('LOAD_ORDERS', () => {

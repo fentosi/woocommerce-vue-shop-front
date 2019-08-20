@@ -108,10 +108,9 @@ export default {
     state.variationLoading = { ...state.variationLoading, [productId]: false };
   },
 
-  [SET_VARIATION](state, variation) {
-    const parentId = variation.parent_id;
-    if (state.products.hasOwnProperty(parentId)) {
-      state.products[parentId].variationsData.push(variation);
+  [SET_VARIATION](state, { productID, variation }) {
+    if (state.products.hasOwnProperty(productID)) {
+      state.products[productID].variationsData.push(variation);
       state.products = { ...state.products };
     } else {
       throw new Error('Could not find product for variation');

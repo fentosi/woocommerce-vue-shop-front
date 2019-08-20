@@ -8,6 +8,7 @@ import {
   REMOVE_ITEM_FROM_CART, SET_ERROR
 } from '../../../src/store/mutationTypes';
 import ordersRepository from '../../../src/repositories/orders';
+import { LOAD_PRODUCTS } from '../../../src/store/actionTypes';
 jest.mock('../../../src/repositories/orders');
 
 describe('Cart.vue', () => {
@@ -35,6 +36,10 @@ describe('Cart.vue', () => {
         $store: store
       }
     });
+  });
+
+  afterEach(() => {
+    storeCommitSpy.mockRestore();
   });
 
   describe('cartItems', () => {
@@ -227,10 +232,15 @@ describe('Cart.vue', () => {
         expect(component.vm.isSubmitting).toEqual(false);
       });
 
-      it('calls clear cart on successful submit', () => {
-        component.vm.submitCart();
+      it('calls load products and clear cart on successful submit', async () => {
+        let storeDispatchSpy = jest.spyOn(store, 'dispatch');
+
+        await component.vm.submitCart();
 
         expect(storeCommitSpy).toHaveBeenCalledWith(CLEAR_CART);
+        expect(storeDispatchSpy).toHaveBeenCalledWith(LOAD_PRODUCTS);
+
+        storeDispatchSpy.mockRestore();
       });
 
       it('sets error if submitting is failed', async () => {

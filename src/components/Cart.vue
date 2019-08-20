@@ -111,6 +111,7 @@ import {
 } from '../store/mutationTypes';
 import { createOrderData } from '../libs/createOrderData';
 import ordersRepository from '../repositories/orders';
+import { LOAD_PRODUCTS } from '../store/actionTypes';
 
 export default {
   name: 'cart',
@@ -176,7 +177,9 @@ export default {
       this.isSubmitting = true;
       try {
         await ordersRepository.create(createOrderData(this.cart));
+
         this.$store.commit(CLEAR_CART);
+        this.$store.dispatch(LOAD_PRODUCTS);
       } catch (e) {
         this.$store.commit(SET_ERROR, 'Something went wrong');
       } finally {

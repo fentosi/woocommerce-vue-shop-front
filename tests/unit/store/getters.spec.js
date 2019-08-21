@@ -29,12 +29,25 @@ describe('Getters', () => {
     variationsData: [variation]
   };
 
+  const product2 = {
+    id: 6654,
+    name: 'Suda lamp',
+    slug: 'suda-lamp',
+    permalink: 'http://localhost:8888/shop/suda-lamp/',
+    type: 'simple',
+    status: 'publish',
+    variationsData: []
+  };
+
   let store;
 
   beforeEach(() => {
     store = createStore();
     store.state.orders = [order];
-    store.state.products = { [product.id]: product };
+    store.state.products = {
+      [product.id]: product,
+      [product2.id]: product2
+    };
   });
 
   describe('order', () => {
@@ -82,6 +95,26 @@ describe('Getters', () => {
       const variationInStore = store.getters.variation(4877, 11);
 
       expect(variationInStore).toEqual(undefined);
+    });
+  });
+
+  describe('productsBySearchTerm', () => {
+    it('no searchTerm, returns all products from store ', function() {
+      const productsBySearchTerm = store.getters.productsBySearchTerm();
+
+      expect(productsBySearchTerm).toEqual(store.state.products);
+    });
+
+    it('empty searchTerm, returns all products from store ', function() {
+      const productsBySearchTerm = store.getters.productsBySearchTerm('');
+
+      expect(productsBySearchTerm).toEqual(store.state.products);
+    });
+
+    it('given searchTerm, returns matching products from store ', function() {
+      const productsBySearchTerm = store.getters.productsBySearchTerm('head');
+
+      expect(productsBySearchTerm).toEqual({ [product.id]: product });
     });
   });
 });

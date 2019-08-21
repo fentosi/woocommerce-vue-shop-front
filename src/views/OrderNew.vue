@@ -6,10 +6,10 @@
     </h1>
 
     <div class="products-list">
-      <h3>Product items </h3>
+      <h3>Product items <input type="text" placeholder="Search" v-model="searchTerm" /> </h3>
       <loader v-if="isLoading" />
-      <div v-else-if="products">
-        <template v-for="product in products">
+      <div v-else-if="visibleProducts">
+        <template v-for="product in visibleProducts">
           <order-new-item v-bind="product" v-bind:key="product.id" />
         </template>
       </div>
@@ -24,6 +24,12 @@
 </template>
 
 <style scoped>
+  h3 input {
+    float: right;
+    font-size: 1.2rem;
+    padding: 4px 2px;
+  }
+
   .content {
     padding: 15px;
   }
@@ -66,7 +72,6 @@
 
 <script>
 import { LOAD_PRODUCTS } from '../store/actionTypes';
-import { mapState } from 'vuex';
 import OrderNewItem from '../components/OrderNewItem';
 import Cart from '../components/Cart';
 import { SET_ERROR } from '../store/mutationTypes';
@@ -76,14 +81,17 @@ export default {
   name: 'orderNew',
   data() {
     return {
-      isLoading: false
+      isLoading: false,
+      searchTerm: ''
     };
   },
   components: {
     OrderNewItem, Cart, Loader
   },
   computed: {
-    ...mapState(['products'])
+    visibleProducts: function() {
+      return this.$store.getters.productsBySearchTerm(this.searchTerm);
+    }
   },
   created() {
     this.loadProducts();

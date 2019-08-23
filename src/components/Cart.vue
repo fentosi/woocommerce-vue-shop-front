@@ -11,7 +11,12 @@
             <div class="quantity text-center">{{cartItem.quantity}}x</div>
             <div class="name">
               <div v-if="cartItem.variationData">
+                <div v-if="cartItem.variationData.name">
                 {{cartItem.variationData.name}}
+                </div>
+                <div v-else>
+                  {{cartItem.name}} - {{cartItem.variationData.attributes[0].option}}
+                </div>
               </div>
               <div v-else>
                 {{cartItem.name}}
@@ -127,7 +132,7 @@ export default {
       this.cart.forEach((item) => {
         const product = this.$store.getters.product(item.productId);
         const variationData = item.variationId ? this.$store.getters.variation(item.productId, item.variationId) : null;
-
+        console.log(product);
         itemsInCart.push({
           id: product.id + (item.variationId ? '-' + item.variationId : ''),
           productId: product.id,

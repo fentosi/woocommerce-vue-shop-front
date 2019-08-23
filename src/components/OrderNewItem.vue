@@ -19,7 +19,7 @@
               <li class="list-group-item">
                 <button
                         class="btn btn-primary"
-                        v-on:click="addVariationToCart(variation.id)"
+                        v-on:click="addVariationToCart(variation.id, $event)"
                         v-bind:disabled="variation.stock == 0">
                   <font-awesome-icon icon="shopping-cart" />
                   &nbsp;
@@ -122,12 +122,15 @@ export default {
         quantity: 1
       });
     },
-    addVariationToCart(variationId) {
+    addVariationToCart(variationId, $event) {
       this.$store.commit(ADD_ITEM_TO_CART, {
         productId: this.id,
         variationId: variationId,
         quantity: 1
       });
+
+      let popperContainer = $event.path[4];
+      popperContainer.style = 'display:none';
     }
   }
 };
